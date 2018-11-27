@@ -11,8 +11,11 @@
     {% else %}
       <li><a href="{{ url_for('auth.register') }}">Register</a>
       <li><a href="{{ url_for('auth.login') }}">Log In</a>
+      <li><button onclick="fbLogout()">FB Log out</button></li>
     {% endif %}
   </ul>
+  <div id="status">
+  </div>
 </nav>
 <section class="content">
   <header>
