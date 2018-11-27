@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask, request, Response
+from flask_babel import Babel
 from flask_pymongo import PyMongo
 
 from supermamas import config
@@ -9,6 +10,7 @@ from supermamas import models
 def create_app(test_config=None):
     """Create and configure an instance of the Flask application."""
     app = Flask(__name__, instance_relative_config=True)
+    app.secret_key = config.APP_SECRET
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
@@ -42,5 +44,6 @@ def create_app(test_config=None):
     # Enable translation extension
     app.jinja_env.add_extension("jinja2.ext.i18n")
     app.jinja_env.install_null_translations()
+    babel = Babel(app)
 
     return app

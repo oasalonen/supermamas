@@ -1,0 +1,10 @@
+{% macro input(name, label="", value="", type="text", errors=None, values=None) -%}
+    {% set invalid = "invalid" if name in errors %}
+    {% set value = values[name] if name in values else value  %}
+    <label for="{{ name }}" class="{{ invalid }}">{{ label }}</label>
+    <input name="{{ name }}" id="{{ name }}" type="{{ type }}" value="{{ value }}" class="{{ invalid }}" required/>
+{%- endmacro %}
+
+{%- macro submit(value) -%}
+    <input type="submit" value="{{ value }}"/> 
+{%- endmacro %}

@@ -12,6 +12,7 @@ pylint = "*"
 flask = "*"
 flask-pymongo = "*"
 gunicorn = "*"
+flask-babel = "*"
 
 [requires]
 python_version = "3.7"
