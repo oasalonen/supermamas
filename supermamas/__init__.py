@@ -39,4 +39,8 @@ def create_app(test_config=None):
 
     app.add_url_rule('/', endpoint='index')
 
+    # Enable translation extension
+    app.jinja_env.add_extension("jinja2.ext.i18n")
+    app.jinja_env.install_null_translations()
+
     return app

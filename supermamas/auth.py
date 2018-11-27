@@ -4,7 +4,7 @@ bp = Blueprint("auth", __name__)
 
 @bp.route("/register")
 def register():
-    return ""
+    return render_template("register.html.j2")
 
 @bp.route("/login")
 def login():
