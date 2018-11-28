@@ -2,10 +2,9 @@ import os
 
 from flask import Flask, request, Response
 from flask_babel import Babel
-from flask_pymongo import PyMongo
 
 from supermamas import config
-from supermamas import models
+from supermamas import accounts
 
 def create_app(test_config=None):
     """Create and configure an instance of the Flask application."""
@@ -25,14 +24,7 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    mongo = PyMongo(app)
-
-    @app.route("/hello")
-    def hello():
-        u = models.User()
-        u.first_name = "abc"
-        mongo.db.users.insert_one(u.__dict__)
-        return 'Hello, World!'
+    accounts.init(app)
 
     # apply the blueprints to the app
     from supermamas import root, auth

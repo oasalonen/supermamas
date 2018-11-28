@@ -1,1 +1,0 @@
-from supermamas.models.user import User

@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, request, flash
 from flask_babel import gettext
+from supermamas import accounts
 
 bp = Blueprint("auth", __name__)
 
@@ -8,14 +9,8 @@ def register():
     errors = {}
 
     if request.method == "POST":
-        first_name = request.form["first_name"]
-        last_name = request.form["last_name"]
-
-        if not first_name:
-            errors["first_name"] = gettext(u"First name is missing")
-        if not last_name:
-            errors["last_name"] = gettext(u"Last name is missing")
-        
+        registration_service = accounts.RegistrationService()
+        user, errors = registration_service.register_bubble_mama(request.form)
         if not errors:
             return redirect("/")
         else:

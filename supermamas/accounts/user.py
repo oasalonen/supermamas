@@ -12,10 +12,18 @@ class User(dict):
     @property
     def first_name(self):
         return self["first_name"]
+    
+    @first_name.setter
+    def first_name(self, value):
+        self["first_name"] = value
 
     @property
     def last_name(self):
         return self["last_name"]
+
+    @last_name.setter
+    def last_name(self, value):
+        self["last_name"] = value
 
     @property
     def is_admin(self):
@@ -23,5 +31,3 @@ class User(dict):
 
     def has_role(self, role):
         return role in self.get("roles", [])
-
-    #def from_registration(registration):
