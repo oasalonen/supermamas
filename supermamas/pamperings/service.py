@@ -1,5 +1,5 @@
 from flask_babel import gettext
-from dateutil import rrule
+from dateutil import rrule, parser
 from datetime import datetime, date, timedelta
 
 from supermamas.pamperings import Signup
@@ -47,15 +47,27 @@ class Service:
             "date_range[]": date_range
             }
 
-    def create_pampering(self, bubble_mama_id, form):
-        available_dates = list(filter(lambda d: d.selected, form.date_range))
+    def create_pampering(self, bubble_mama_id, date_range):
+        errors = {}
 
-        pampering = Pampering()
-        pampering.bubble_mama = self._accounts_repository().get(bubble_mama_id)
-        pampering.available_dates = available_dates
-        # Save in db
-        # Return potential errors
-        return pampering, None
+        available_dates = list(map(lambda d: parser.parse(d), date_range))
+        if len(available_dates) == 0:
+            errors["date_range[]"] = gettext(u"You must select at least one date for a pampering")
+            return None, errors
+
+        bubble_mama = self._accounts_repository().get(bubble_mama_id)
+        if not bubble_mama:
+            errors["bubble_mama_id"] = gettext(u"That bubble mama doesn't seem to exist...")
+
+        if not errors:
+            pampering = Pampering()
+            pampering.bubble_mama = bubble_mama
+            pampering.available_dates = available_dates
+            pampering = self._repository().insert(pampering)
+        else:
+            pampering = None
+
+        return (pampering, errors)
 
     def add_signup(self, pampering_id, helping_mama_id, availabilities, max_visits=0):
         signup = Signup()

@@ -13,6 +13,10 @@ class User(dict):
     def id(self):
         return self["_id"]
 
+    @id.setter
+    def id(self, value):
+        self["_id"] = value
+
     @property
     def first_name(self):
         return self["first_name"]

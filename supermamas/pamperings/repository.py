@@ -1,4 +1,4 @@
-from flask_pymongo import PyMongo
+from flask_pymongo import PyMongo, ObjectId
 
 class Repository:
     __instance = None
@@ -15,10 +15,12 @@ class Repository:
         return self.pymongo.db.pamperings
 
     def insert(self, pampering):
-        return self.collection.insert_one(pampering)
+        result = self.collection.insert_one(pampering)
+        pampering.id = str(result.inserted_id)
+        return pampering
 
     def get(self, pampering_id):
-        return self.collection.find_one({"_id": pampering_id})
+        return self.collection.find_one({"_id": ObjectId(pampering_id)})
 
     def update_field(self, pampering_id, field, value):
-        self.collection.update_one({"_id": pampering_id}, {"$set": {field: value}})
+        self.collection.update_one({"_id": ObjectId(pampering_id)}, {"$set": {field: value}})

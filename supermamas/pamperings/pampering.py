@@ -10,6 +10,10 @@ class Pampering(dict):
     def id(self):
         return self["_id"]
 
+    @id.setter
+    def id(self, value):
+        self["_id"] = value
+
     @property
     def bubble_mama(self):
         return self["bubble_mama"]

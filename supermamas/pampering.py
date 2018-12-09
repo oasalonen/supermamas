@@ -15,7 +15,7 @@ def register():
     end_date = None
 
     if request.method == "POST":
-        if request.form["refresh_dates"]:
+        if request.form.get("refresh_dates"):
             start_date = datetime.strptime(request.form["start_date"], "%Y-%m-%d").date()
             end_date = datetime.strptime(request.form["end_date"], "%Y-%m-%d").date()
         else:
