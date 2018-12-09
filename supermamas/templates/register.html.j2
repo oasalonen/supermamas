@@ -8,8 +8,8 @@
 
 {% block content %}
 <form method="post">
-    {{ forms.input("first_name", label=_("First name"), errors=form_errors, values=form_values) }}
-    {{ forms.input("last_name", label=_("Last name"), errors=form_errors, values=form_values) }}
+    {{ forms.input("first_name", label=_("First name"), errors=form_errors, values=form_values, flags=["required"]) }}
+    {{ forms.input("last_name", label=_("Last name"), errors=form_errors, values=form_values, flags=["required"]) }}
     {{ forms.submit(_("Register"))}}
 </form>
 {% endblock %}

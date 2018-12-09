@@ -1,10 +1,18 @@
-{% macro input(name, label="", value="", type="text", errors=None, values=None) -%}
-    {% set invalid = "invalid" if name in errors %}
+{% macro input(name, label="", value="", type="text", errors={}, values={}, flags={}) -%}
+    {% set invalid = "invalid" if name in errors else "" %}
     {% set value = values[name] if name in values else value  %}
+    {% set required = "required" if "required" in flags else "" %}
     <label for="{{ name }}" class="{{ invalid }}">{{ label }}</label>
-    <input name="{{ name }}" id="{{ name }}" type="{{ type }}" value="{{ value }}" class="{{ invalid }}" required/>
+    <input name="{{ name }}" id="{{ name }}" type="{{ type }}" value="{{ value }}" class="{{ invalid }}" {{ required }}/>
 {%- endmacro %}
 
-{%- macro submit(value) -%}
-    <input type="submit" value="{{ value }}"/> 
+{% macro date_selector(name, group="dates", value="", values=None) -%}
+    {% set value = values[name] if name in values else value %}
+    {% set checked = "checked" if value.selected %}
+    <label for="{{ name }}">{{ value.label }}</label>
+    <input name="{{ group }}" id="{{ name }}" type="checkbox" value="{{ name }}" {{ checked }} />
+{%- endmacro %}
+
+{%- macro submit(value, name="") -%}
+    <input type="submit" value="{{ value }}" name="{{ name }}" /> 
 {%- endmacro %}
