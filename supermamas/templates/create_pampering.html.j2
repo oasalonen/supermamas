@@ -1,0 +1,14 @@
+{% extends "base.html.j2" %}
+
+{% import "forms.html.j2" as forms %}
+
+{% block header %}
+<h1>{% trans %}Create pampering{% endtrans %}</h1>
+{% endblock %}
+
+{% block content %}
+<form method="post">
+    {{ forms.input("bubble_mama_id", label=_("Bubble mama"), errors=form_errors, values=form_values) }}
+    {{ forms.submit(_("Create"))}}
+</form>
+{% endblock %}

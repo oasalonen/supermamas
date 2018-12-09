@@ -12,10 +12,13 @@ class Repository:
 
     @property
     def collection(self):
-        return self.pymongo.db.users
+        return self.pymongo.db.pamperings
 
-    def insert(self, user):
-        return self.collection.insert_one(user)
-    
-    def get(self, user_id):
-        return self.collection.find_one({"_id": user_id})
+    def insert(self, pampering):
+        return self.collection.insert_one(pampering)
+
+    def get(self, pampering_id):
+        return self.collection.find_one({"_id": pampering_id})
+
+    def update_field(self, pampering_id, field, value):
+        self.collection.update_one({"_id": pampering_id}, {"$set": {field: value}})

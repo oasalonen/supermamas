@@ -5,6 +5,7 @@ from flask_babel import Babel
 
 from supermamas import config
 from supermamas import accounts
+from supermamas import pamperings
 
 def create_app(test_config=None):
     """Create and configure an instance of the Flask application."""
@@ -25,11 +26,13 @@ def create_app(test_config=None):
         pass
 
     accounts.init(app)
+    pamperings.init(app)
 
     # apply the blueprints to the app
-    from supermamas import root, auth
+    from supermamas import root, auth, pampering
     app.register_blueprint(root.bp)
     app.register_blueprint(auth.bp)
+    app.register_blueprint(pampering.bp)
 
     app.add_url_rule('/', endpoint='index')
 

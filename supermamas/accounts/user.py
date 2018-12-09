@@ -10,6 +10,10 @@ class User(dict):
         return "ADMIN"
 
     @property
+    def id(self):
+        return self["_id"]
+
+    @property
     def first_name(self):
         return self["first_name"]
     
