@@ -34,8 +34,14 @@ class Service:
                 "label": "{} {}/{}".format(self.weekdays()[d.weekday()], d.day, d.month)
             }
 
+        bubble_mama = self._accounts_repository().get(bubble_mama_id)
+
         return {
-            "bubble_mama_id": bubble_mama_id,
+            "bubble_mama": {
+                "id": bubble_mama_id,
+                "first_name": bubble_mama.first_name,
+                "last_name": bubble_mama.last_name
+            },
             "start_date": start_date.isoformat(),
             "end_date": end_date.isoformat(),
             "date_range[]": date_range

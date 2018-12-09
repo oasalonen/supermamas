@@ -1,4 +1,6 @@
-from flask_pymongo import PyMongo
+from flask_pymongo import PyMongo, ObjectId
+
+from supermamas.accounts.user import User
 
 class Repository:
     __instance = None
@@ -18,4 +20,4 @@ class Repository:
         return self.collection.insert_one(user)
     
     def get(self, user_id):
-        return self.collection.find_one({"_id": user_id})
+        return User(self.collection.find_one({"_id": ObjectId(user_id)}))

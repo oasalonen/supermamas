@@ -8,8 +8,25 @@
 {% endblock %}
 
 {% block content %}
-<form method="post">
-    {{ calendar.date_range_selector(form_values.start_date, form_values.end_date, form_values["date_range[]"]) }}
-    {{ forms.submit(_("Create"))}}
-</form>
+<section>
+    <h2>{% trans %}Bubble mama details{% endtrans %}</h2>
+    <div class="grid-container grid-margin-x">
+        <div class="grid-x">
+            <div class="cell small-4">{% trans %}First name{% endtrans %}</div>
+            <div class="cell small-8">{{ form_values.bubble_mama.first_name }}</div>
+        </div>
+        <div class="grid-x">
+            <div class="cell small-4">{% trans %}Last name{% endtrans %}</div>
+            <div class="cell small-8">{{ form_values.bubble_mama.last_name }}</div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2>{% trans %}Available pampering dates{% endtrans %}</h2>
+    <form method="post">
+        {{ calendar.date_range_selector(form_values.start_date, form_values.end_date, form_values["date_range[]"]) }}
+        {{ forms.submit(_("Create"))}}
+    </form>
+</section>
 {% endblock %}
