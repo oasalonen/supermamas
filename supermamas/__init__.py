@@ -2,6 +2,7 @@ import os
 
 from flask import Flask, request, Response
 from flask_babel import Babel
+from sassutils.wsgi import SassMiddleware
 
 from supermamas import config
 from supermamas import accounts
@@ -24,6 +25,14 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
+    
+    # Enable per-request-Sass
+    # To enable it per-deployment, see https://sass.github.io/libsass-python/frameworks/flask.html#id6
+    app.wsgi_app = SassMiddleware(app.wsgi_app, {
+        'supermamas': ('static/sass', 'static/css', '/static/css')
+    })
+    import logging
+    logging.basicConfig()
 
     accounts.init(app)
     pamperings.init(app)
