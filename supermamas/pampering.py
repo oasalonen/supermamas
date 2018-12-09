@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, request, flash
 from flask_babel import gettext
-from dateutil import rrule
+from dateutil import rrule, parser
 from datetime import datetime
 
 from supermamas import pamperings
@@ -16,8 +16,8 @@ def register():
 
     if request.method == "POST":
         if request.form.get("refresh_dates"):
-            start_date = datetime.strptime(request.form["start_date"], "%Y-%m-%d").date()
-            end_date = datetime.strptime(request.form["end_date"], "%Y-%m-%d").date()
+            start_date = parser.parse(request.form["start_date"]).date()
+            end_date = parser.parse(request.form["end_date"]).date()
         else:
             user, errors = pamperings.Service().create_pampering(bubble_mama_id, request.form.getlist("date_range[]"))
             if not errors:
