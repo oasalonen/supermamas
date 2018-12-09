@@ -117,5 +117,5 @@ dmypy.json
 *.code-workspace
 .vscode
 
-.scss.css
-.scss.css.map
+*.scss.css
+*.scss.css.map
