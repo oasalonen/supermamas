@@ -24,12 +24,13 @@ class Service:
 
     def prepare_pampering(self, bubble_mama_id, start_date=None, end_date=None):
         start_date = start_date if start_date else date.today()
-        end_date = end_date if end_date else start_date + timedelta(days=14)
+        end_date = end_date if end_date else start_date + timedelta(days=20)
         date_range = {}
         for dt in rrule.rrule(rrule.DAILY, dtstart=datetime(start_date.year, start_date.month, start_date.day), until=datetime(end_date.year, end_date.month, end_date.day)):
             d = dt.date()
             date_range[d.isoformat()] = {
-                "selected": True,
+                "selected": False,
+                "weekday": d.weekday(),
                 "label": "{} {}/{}".format(self.weekdays()[d.weekday()], d.day, d.month)
             }
 

@@ -8,10 +8,15 @@ from supermamas import config
 from supermamas import accounts
 from supermamas import pamperings
 
+def debug(text):
+  print(text)
+  return ''
+
 def create_app(test_config=None):
     """Create and configure an instance of the Flask application."""
     app = Flask(__name__, instance_relative_config=True)
     app.secret_key = config.APP_SECRET
+    app.jinja_env.filters['debug']=debug
 
     if test_config is None:
         # load the instance config, if it exists, when not testing

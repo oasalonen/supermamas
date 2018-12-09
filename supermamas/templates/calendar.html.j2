@@ -1,14 +1,21 @@
 {% import "forms.html.j2" as forms %}
 
 {% macro date_range_selector(start_date, end_date, date_range) -%}
+<div class="date-range-selector">
 <ul>
     <li>{{ forms.input("start_date", label=_("Start date"), type="date", value=start_date) }}</li>
     <li>{{ forms.input("end_date", label=_("End date"), type="date", value=end_date) }}</li>
     <li>{{ forms.submit("Refresh dates", name="refresh_dates") }}</li>
 </ul>
-<ul>
-{%- for item in date_range  %}
-    <li>{{ forms.date_selector(item, group="date_range[]", values=date_range) }}</li>
+<ul class="days">
+{% set ordered_dates = date_range|dictsort %}
+{% set first_weekday = date_range[ordered_dates|first|first].weekday %}
+{%- for i in range(first_weekday - 0) %}
+    <li class="empty"></li>
+{%- endfor %}
+{%- for item in ordered_dates %}
+    <li>{{ forms.date_selector(item|first, group="date_range[]", values=date_range) }}</li>
 {%- endfor %}
 </ul>
+</div>
 {%- endmacro %}

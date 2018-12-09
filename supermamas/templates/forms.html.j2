@@ -9,8 +9,10 @@
 {% macro date_selector(name, group="dates", value="", values=None) -%}
     {% set value = values[name] if name in values else value %}
     {% set checked = "checked" if value.selected %}
-    <label for="{{ name }}">{{ value.label }}</label>
-    <input name="{{ group }}" id="{{ name }}" type="checkbox" value="{{ name }}" {{ checked }} />
+    <div class="container">
+        <input name="{{ group }}" id="{{ name }}" type="checkbox" value="{{ name }}" {{ checked }} />
+        <label for="{{ name }}">{{ value.label }}</label>
+    </div>
 {%- endmacro %}
 
 {%- macro submit(value, name="") -%}
