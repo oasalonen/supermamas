@@ -14,7 +14,7 @@
         <li class="cell empty"></li>
     {%- endfor %}
     {%- for item in ordered_dates %}
-        <li class="cell">{{ forms.date_selector(item|first, group="date_range[]", values=date_range) }}</li>
+        <li class="cell custom-checkbox">{{ forms.date_selector(item|first, group="date_range[]", values=date_range) }}</li>
     {%- endfor %}
     </ul>
 </div>
