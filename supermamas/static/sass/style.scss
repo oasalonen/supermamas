@@ -5,57 +5,7 @@
 @include foundation-xy-grid-classes;
 @include foundation-flex-classes;
 
-.custom-checkbox {
-    display: block;
-    height: 50px;
-    color: #777;
-
-    .container {
-        display: block;
-        position: relative;
-        height: 100%;
-        cursor: pointer;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-    }
-    input {
-        position: absolute;
-        opacity: 0;
-        cursor: pointer;
-        height: 0;
-        width: 0;
-    }
-    .container label {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 100%;
-        margin: 0;
-        background-color: #eee;
-    }
-    .container:hover label {
-        background-color: #ccc;
-    }
-    .container input:checked ~ label {
-        background-color: #2196F3;
-    }
-  
-    .checkmark:after {
-        content: "-";
-        display: inline-block;
-        position: relative;
-        height: 0%;
-        width: 100%;
-        vertical-align: middle;
-    }
-  
-    .container input:checked ~ .checkmark:after {
-        content: "✓";
-    }
-}
+@import 'custom-checkbox';
 
 .signup {
     li {
