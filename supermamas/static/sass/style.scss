@@ -7,6 +7,10 @@
 
 @import 'custom-checkbox';
 
+ul.grid-x, ul.cell {
+    margin: 0;
+}
+
 .signup {
     li {
         list-style-type: none;
