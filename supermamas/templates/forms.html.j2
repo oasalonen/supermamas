@@ -18,3 +18,13 @@
 {%- macro submit(value, name="") -%}
     <input type="submit" value="{{ value }}" name="{{ name }}" /> 
 {%- endmacro %}
+
+{%- macro checkbox(name, is_checked=False, group="") -%}
+    {% set checked = "checked" if is_checked %}
+    <div class="custom-checkbox">
+        <div class="container">
+            <input name="{{ group }}" id="{{ name }}" type="checkbox" value="{{ name }}" {{ checked }} />
+            <label for="{{ name }}"></label>
+        </div>
+    </div>
+{%- endmacro %}

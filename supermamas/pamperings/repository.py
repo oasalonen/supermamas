@@ -1,4 +1,5 @@
 from flask_pymongo import PyMongo, ObjectId
+from supermamas.pamperings.pampering import Pampering
 
 class Repository:
     __instance = None
@@ -20,7 +21,7 @@ class Repository:
         return pampering
 
     def get(self, pampering_id):
-        return self.collection.find_one({"_id": ObjectId(pampering_id)})
+        return Pampering(self.collection.find_one({"_id": ObjectId(pampering_id)}))
 
     def update_field(self, pampering_id, field, value):
-        self.collection.update_one({"_id": ObjectId(pampering_id)}, {"$set": {field: value}})
+        return self.collection.update_one({"_id": ObjectId(pampering_id)}, {"$set": {field: value}})

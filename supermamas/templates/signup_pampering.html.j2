@@ -1,0 +1,19 @@
+{% extends "base.html.j2" %}
+
+{% import "forms.html.j2" as forms %}
+{% import "calendar.html.j2" as calendar %}
+
+{% block header %}
+<h1>{% trans name=form_values.bubble_mama.first_name %}Sign up for {{ name }}'s pampering{% endtrans %}</h1>
+{% endblock %}
+
+{% block content %}
+<section>
+    <h2>{% trans %}Available pampering dates{% endtrans %}</h2>
+    <form method="post">
+        {{ calendar.signup(form_values.available_dates, form_values.signups, form_values.current_signup) }}
+        {{ forms.input("max_visits", label=_("Max visits"), errors=form_errors, values=form_values)}}
+        {{ forms.submit(_("Sign up"))}}
+    </form>
+</section>
+{% endblock %}

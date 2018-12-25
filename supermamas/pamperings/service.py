@@ -69,13 +69,59 @@ class Service:
 
         return (pampering, errors)
 
+    def prepare_signup(self, pampering_id, helping_mama_id):
+        pampering = self._repository().get(pampering_id)
+        if not pampering:
+            raise Exception("Pampering not found")
+
+        helping_mama = self._accounts_repository().get(helping_mama_id)
+        if not helping_mama:
+            raise Exception("Helping mama not found")
+
+        available_dates = {dt[0]:dt[1] for dt in [self.displayable_date(dt) for dt in pampering.available_dates]}
+
+        return {
+            "bubble_mama": { "first_name": pampering.bubble_mama["first_name"] },
+            "available_dates": available_dates,
+            "signups": [],
+            "current_signup": { 
+                "helping_mama": helping_mama,
+                "availabilities": [] 
+            }
+        }
+
     def add_signup(self, pampering_id, helping_mama_id, availabilities, max_visits=0):
-        signup = Signup()
-        signup.helping_mama = self._accounts_repository().get(helping_mama_id)
-        signup.availabilities = availabilities
-        signup.max_visits = max_visits
+        errors = {}
+
+        pampering = self._repository().get(pampering_id)
+        if not pampering:
+            raise Exception("Pampering not found: {}", pampering_id)
+
+        helping_mama = self._accounts_repository().get(helping_mama_id)
+        if not helping_mama:
+            raise Exception("Unknown user attempted to sign up for a pampering: {}", helping_mama_id)
+
+        availabilities = list(map(lambda d: parser.parse(d), availabilities))
+        if len(availabilities) == 0 and helping_mama_id not in pampering.signups:
+            errors["availabilities[]"] = gettext(u"You must select at least one date to sign up for a pampering")
+            return None, errors
+
+        if not errors:
+            signup = Signup()
+            signup.helping_mama = helping_mama
+            signup.availabilities = availabilities
+            signup.max_visits = max_visits
         
-        self._repository().update_field(pampering_id, "signups." + helping_mama_id, signup)
+        pampering_plan = self._repository().update_field(pampering_id, "signups." + helping_mama_id, signup)
+        return (pampering_plan, errors)
+
+    def displayable_date(self, dt):
+        d = dt.date()
+        return (d.isoformat(), {
+            "weekday": d.weekday(),
+            "weekday_label": self.weekdays()[d.weekday()],
+            "date_label": "{} {}/{}".format(self.weekdays()[d.weekday()], d.day, d.month)
+        })
 
     def weekdays(self):
         return [gettext(u"Mon"), gettext(u"Tue"), gettext(u"Wed"), gettext(u"Thu"), gettext(u"Fri"), gettext(u"Sat"), gettext(u"Sun")]

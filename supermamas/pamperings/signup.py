@@ -26,3 +26,7 @@ class Signup(dict):
     @property
     def max_visits(self):
         return self["max_visits"]
+
+    @max_visits.setter
+    def max_visits(self, value):
+        self["max_visits"] = value
