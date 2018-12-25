@@ -78,16 +78,34 @@ class Service:
         if not helping_mama:
             raise Exception("Helping mama not found")
 
+        if helping_mama_id == pampering["bubble_mama"]["id"]:
+            raise Exception("A bubble mama cannot sign up for their own pampering")
+
+        current_signup = None
+        signups = {}
+        if pampering.signups:
+            signups = dict(pampering.signups)
+            if helping_mama_id in signups:
+                current_signup = signups[helping_mama_id]
+                del signups[helping_mama_id]
+
+        if not current_signup:
+            current_signup = { 
+                "helping_mama": {
+                    "id": helping_mama.id,
+                    "first_name": helping_mama.first_name,
+                    "last_name": helping_mama.last_name
+                },
+                "availabilities": [] 
+            }
+
         available_dates = {dt[0]:dt[1] for dt in [self.displayable_date(dt) for dt in pampering.available_dates]}
 
         return {
-            "bubble_mama": { "first_name": pampering.bubble_mama["first_name"] },
+            "bubble_mama": pampering.bubble_mama,
             "available_dates": available_dates,
-            "signups": [],
-            "current_signup": { 
-                "helping_mama": helping_mama,
-                "availabilities": [] 
-            }
+            "signups": signups,
+            "current_signup": current_signup
         }
 
     def add_signup(self, pampering_id, helping_mama_id, availabilities, max_visits=0):
@@ -102,9 +120,13 @@ class Service:
             raise Exception("Unknown user attempted to sign up for a pampering: {}", helping_mama_id)
 
         availabilities = list(map(lambda d: parser.parse(d), availabilities))
-        if len(availabilities) == 0 and helping_mama_id not in pampering.signups:
-            errors["availabilities[]"] = gettext(u"You must select at least one date to sign up for a pampering")
-            return None, errors
+        if len(availabilities) == 0:
+            if helping_mama_id in pampering.signups:
+                pampering_plan = self._repository().update_field(pampering_id, "signups." + helping_mama_id, None)
+                return (pampering_plan, None)
+            else:
+                errors["availabilities[]"] = gettext(u"You must select at least one date to sign up for a pampering")
+                return None, errors
 
         if not errors:
             signup = Signup()
@@ -113,7 +135,7 @@ class Service:
             signup.max_visits = max_visits
         
         pampering_plan = self._repository().update_field(pampering_id, "signups." + helping_mama_id, signup)
-        return (pampering_plan, errors)
+        return (pampering_plan, None)
 
     def displayable_date(self, dt):
         d = dt.date()

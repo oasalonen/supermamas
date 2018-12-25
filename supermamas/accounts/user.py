@@ -1,3 +1,4 @@
+from flask_pymongo import ObjectId
 
 class User(dict):
     def __init__(self, init_dict = None):
@@ -11,15 +12,15 @@ class User(dict):
 
     @property
     def id(self):
-        return self["_id"]
+        return str(self.get("_id"))
 
     @id.setter
     def id(self, value):
-        self["_id"] = value
+        self["_id"] = ObjectId(value)
 
     @property
     def first_name(self):
-        return self["first_name"]
+        return self.get("first_name")
     
     @first_name.setter
     def first_name(self, value):
@@ -27,7 +28,7 @@ class User(dict):
 
     @property
     def last_name(self):
-        return self["last_name"]
+        return self.get("last_name")
 
     @last_name.setter
     def last_name(self, value):

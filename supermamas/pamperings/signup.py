@@ -9,15 +9,19 @@ class Signup(dict):
 
     @property
     def helping_mama(self):
-        return self["helping_mama"]
+        return self.get("helping_mama")
 
     @helping_mama.setter
-    def helping_mama(self, value):
-        self["helping_mama"] = value
+    def helping_mama(self, user):
+        self["helping_mama"] = {
+            "id": user.id,
+            "first_name": user.first_name,
+            "last_name": user.last_name
+        }
     
     @property
     def availabilities(self):
-        return self["availabilities"]
+        return self.get("availabilities")
 
     @availabilities.setter
     def availabilities(self, value):
@@ -25,7 +29,7 @@ class Signup(dict):
 
     @property
     def max_visits(self):
-        return self["max_visits"]
+        return self.get("max_visits")
 
     @max_visits.setter
     def max_visits(self, value):

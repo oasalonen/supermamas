@@ -1,3 +1,4 @@
+from flask_pymongo import ObjectId
 from supermamas.pamperings.signup import Signup
 
 class Pampering(dict):
@@ -8,23 +9,27 @@ class Pampering(dict):
 
     @property 
     def id(self):
-        return self["_id"]
+        return str(self.get("_id"))
 
     @id.setter
     def id(self, value):
-        self["_id"] = value
+        self["_id"] = ObjectId(value)
 
     @property
     def bubble_mama(self):
-        return self["bubble_mama"]
+        return self.get("bubble_mama")
 
     @bubble_mama.setter
-    def bubble_mama(self, value):
-        self["bubble_mama"] = value
+    def bubble_mama(self, user):
+        self["bubble_mama"] = {
+            "id": user.id,
+            "first_name": user.first_name,
+            "last_name": user.last_name
+        }
 
     @property
     def available_dates(self):
-        return self["available_dates"]
+        return self.get("available_dates")
 
     @available_dates.setter
     def available_dates(self, dates):
@@ -32,8 +37,8 @@ class Pampering(dict):
 
     @property
     def signups(self):
-        return self["signups"]
+        return self.get("signups")
 
     @property
     def assignments(self):
-        return self["assignments"]
+        return self.get("assignments")
