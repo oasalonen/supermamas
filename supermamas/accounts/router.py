@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, redirect, request, flash, Response
 from flask_babel import gettext
 from flask_login import logout_user, login_required, login_user
 from supermamas import accounts
+from supermamas.router_utils import is_safe_url
 from supermamas.accounts.forms.login import LoginForm
 from supermamas.accounts.forms.registration import RegistrationForm
 
@@ -39,7 +40,8 @@ def login():
             flash(gettext(u"Logged in as %(name)s", name=user.first_name))
 
             url = request.args.get("next")
-            return redirect(url if url else "/")
+            url = url if is_safe_url(url) else "/"
+            return redirect(url)
         else:
             flash(gettext(u"Invalid login credentials"))
 
