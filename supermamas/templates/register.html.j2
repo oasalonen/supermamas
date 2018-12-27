@@ -8,8 +8,11 @@
 
 {% block content %}
 <form method="post">
-    {{ forms.input("first_name", label=_("First name"), errors=form_errors, values=form_values, flags=["required"]) }}
-    {{ forms.input("last_name", label=_("Last name"), errors=form_errors, values=form_values, flags=["required"]) }}
+    {{ forms.render_field(form.email) }}
+    {{ forms.render_field(form.password) }}
+    {{ forms.render_field(form.verify_password) }}
+    {{ forms.render_field(form.first_name) }}
+    {{ forms.render_field(form.last_name) }}
     {{ forms.submit(_("Register")) }}
 </form>
 {% endblock %}

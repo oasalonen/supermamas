@@ -28,6 +28,14 @@ class User(dict, UserMixin):
         self["email"] = value
 
     @property
+    def password(self):
+        return self.get("password")
+
+    @password.setter
+    def password(self, value):
+        self["password"] = value
+
+    @property
     def first_name(self):
         return self.get("first_name")
     

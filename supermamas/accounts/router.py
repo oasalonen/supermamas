@@ -3,6 +3,7 @@ from flask_babel import gettext
 from flask_login import logout_user, login_required, login_user
 from supermamas import accounts
 from supermamas.accounts.forms.login import LoginForm
+from supermamas.accounts.forms.registration import RegistrationForm
 
 bp = Blueprint("accounts", __name__)
 
@@ -12,17 +13,21 @@ def page_not_found(e):
 
 @bp.route("/register", methods=("GET", "POST"))
 def register():
-    errors = {}
+    form = RegistrationForm(request.form)
 
-    if request.method == "POST":
-        registration_service = accounts.RegistrationService()
-        user, errors = registration_service.register_bubble_mama(request.form)
-        if not errors:
+    if request.method == "POST" and form.validate():
+        user = accounts.AuthenticationService().register(
+            form.email.data,
+            form.password.data,
+            form.first_name.data,
+            form.last_name.data
+            )
+        if user:
             return redirect("/")
         else:
-            flash(gettext(u"Fix all errors"))
+            flash(gettext(u"We could not register your account. Have you already signed up with this email?"))
 
-    return render_template("register.html.j2", form_errors=errors, form_values=request.form)
+    return render_template("register.html.j2", form=form)
 
 @bp.route("/login", methods=["GET", "POST"])
 def login():
@@ -32,7 +37,9 @@ def login():
         if user:
             login_user(user)
             flash(gettext(u"Logged in as %(name)s", name=user.first_name))
-            return redirect("/")
+
+            url = request.args.get("next")
+            return redirect(url if url else "/")
         else:
             flash(gettext(u"Invalid login credentials"))
 

@@ -38,3 +38,17 @@ class AuthenticationService:
             return user
         else:
             return None
+
+    def register(self, email, password, first_name, last_name):
+        # Disallow multiple accounts with the same email
+        if self._repository().get_by_email(email):
+            return None
+
+        password = self._bcrypt().generate_password_hash(password)
+        user = User()
+        user.email = email
+        user.password = password
+        user.first_name = first_name
+        user.last_name = last_name
+
+        return self._repository().insert(user)
