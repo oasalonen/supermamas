@@ -15,8 +15,8 @@
     </div>
 {%- endmacro %}
 
-{%- macro submit(value, name="") -%}
-    <input type="submit" value="{{ value }}" name="{{ name }}" /> 
+{%- macro submit(value, name="", class="") -%}
+    <input type="submit" class="button success {{ class }}" value="{{ value }}" name="{{ name }}" /> 
 {%- endmacro %}
 
 {%- macro checkbox(name, is_checked=False, group="") -%}

@@ -1,0 +1,46 @@
+{% extends "base.html.j2" %}
+
+{% import "forms.html.j2" as forms %}
+
+{% block header %}
+<h1>{% trans %}Districts{% endtrans %}</h1>
+{% endblock %}
+
+{% block content %}
+<section>
+    <ul class="grid-container fluid">
+    {% for district in districts %}
+        {% set delete_district_button_id = "delete_district_" ~ district.id %}
+        <li class="grid-x grid-margin-x align-middle">
+            <span class="cell small-8">
+                {{ district.name }}
+            </span>
+            <span class="cell small-4">
+                <button type="button" id="{{ delete_district_button_id }}" class="alert button stretch">{% trans %}Delete{% endtrans %}</button>
+            </span>
+            <script>
+                var deleteButton = document.getElementById("{{ delete_district_button_id }}");
+                deleteButton.addEventListener("click", function() {
+                    fetch("/admin/districts/{{ district.id }}", {
+                        method: "DELETE"
+                    }).then(function(response) {
+                        location=location.href
+                    });
+                });
+            </script>
+        </li>
+    {% endfor %}
+
+        <form method="post">
+            <li class="grid-x grid-margin-x align-bottom">
+                <span class="cell small-8">
+                    {{ forms.input("district_name", label=_("New district"), errors=form_errors, values=form_values, flags=["required"]) }}
+                </span>
+                <span class="cell small-4">
+                    {{ forms.submit(_("Add"), class="stretch") }}
+                </span>
+            </li>
+        </form>
+    </ul>
+</section>
+{% endblock %}

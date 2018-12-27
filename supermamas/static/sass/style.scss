@@ -4,11 +4,17 @@
 @include foundation-typography;
 @include foundation-xy-grid-classes;
 @include foundation-flex-classes;
+@include foundation-button;
 
 @import 'custom-checkbox';
 
 ul.grid-x, ul.cell {
     margin: 0;
+}
+
+button.stretch, input.stretch {
+    display: block;
+    width: 100%;
 }
 
 .signup {

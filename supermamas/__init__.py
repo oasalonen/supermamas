@@ -7,6 +7,7 @@ from sassutils.wsgi import SassMiddleware
 from supermamas import config
 from supermamas import accounts
 from supermamas import pamperings
+from supermamas import districts
 
 def debug(text):
   print(text)
@@ -39,14 +40,17 @@ def create_app(test_config=None):
     import logging
     logging.basicConfig()
 
+    # initialize domain modules
+    districts.init(app)
     accounts.init(app)
     pamperings.init(app)
 
     # apply the blueprints to the app
-    from supermamas import root, auth, pampering
+    from supermamas import root, auth, pampering, admin_districts
     app.register_blueprint(root.bp)
     app.register_blueprint(auth.bp)
     app.register_blueprint(pampering.bp)
+    app.register_blueprint(admin_districts.bp)
 
     app.add_url_rule('/', endpoint='index')
 
