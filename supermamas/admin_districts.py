@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, redirect, request, flash
+from flask_login import login_required
 from flask_babel import gettext
 
 from supermamas import districts
@@ -6,6 +7,7 @@ from supermamas import districts
 bp = Blueprint("admin_districts", __name__)
 
 @bp.route("/admin/districts", methods=("GET", "POST"))
+@login_required
 def admin():
     errors = {}
     if request.method == "POST":

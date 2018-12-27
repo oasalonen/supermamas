@@ -37,6 +37,7 @@ def create_app(test_config=None):
     app.wsgi_app = SassMiddleware(app.wsgi_app, {
         'supermamas': ('static/sass', 'static/css', '/static/css')
     })
+
     import logging
     logging.basicConfig()
 
@@ -46,9 +47,9 @@ def create_app(test_config=None):
     pamperings.init(app)
 
     # apply the blueprints to the app
-    from supermamas import root, auth, pampering, admin_districts
+    from supermamas import root, pampering, admin_districts
     app.register_blueprint(root.bp)
-    app.register_blueprint(auth.bp)
+    app.register_blueprint(accounts.router.bp)
     app.register_blueprint(pampering.bp)
     app.register_blueprint(admin_districts.bp)
 

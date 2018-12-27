@@ -7,10 +7,10 @@
   <ul>
     {% if g.user %}
       <li><span>{{ g.user['username'] }}</span>
-      <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
+      <li><a href="{{ url_for('accounts.logout') }}">Log Out</a>
     {% else %}
-      <li><a href="{{ url_for('auth.register') }}">Register</a>
-      <li><a href="{{ url_for('auth.login') }}">Log In</a>
+      <li><a href="{{ url_for('accounts.register') }}">Register</a>
+      <li><a href="{{ url_for('accounts.login') }}">Log In</a>
       <li><button onclick="fbLogout()">FB Log out</button></li>
     {% endif %}
   </ul>

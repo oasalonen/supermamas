@@ -16,6 +16,9 @@ gunicorn = "*"
 flask-babel = "*"
 libsass = "*"
 python-dateutil = "*"
+flask-login = "*"
+flask-wtf = "*"
+flask-bcrypt = "*"
 
 [requires]
 python_version = "3.7"

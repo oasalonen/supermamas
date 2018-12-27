@@ -1,6 +1,7 @@
 from flask_pymongo import ObjectId
+from flask_login import UserMixin
 
-class User(dict):
+class User(dict, UserMixin):
     def __init__(self, init_dict = None):
         if init_dict:
             self.update(init_dict)
@@ -17,6 +18,14 @@ class User(dict):
     @id.setter
     def id(self, value):
         self["_id"] = ObjectId(value)
+
+    @property
+    def email(self):
+        return self.get("email")
+
+    @email.setter
+    def email(self, value):
+        self["email"] = value
 
     @property
     def first_name(self):

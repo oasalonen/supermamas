@@ -22,4 +22,7 @@ class Repository:
         return user
     
     def get(self, user_id):
-        return User(self.collection.find_one({"_id": ObjectId(user_id)}))
+        return User(self.collection.find_one({ "_id": ObjectId(user_id) }))
+
+    def get_by_email(self, email):
+        return User(self.collection.find_one({ "email": email }))
