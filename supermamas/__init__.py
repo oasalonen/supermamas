@@ -8,6 +8,8 @@ from supermamas import config
 from supermamas import accounts
 from supermamas import pamperings
 from supermamas import districts
+from supermamas.template_renderer import TemplateRenderer
+from supermamas.emailer import Emailer
 
 def debug(text):
   print(text)
@@ -45,6 +47,10 @@ def create_app(test_config=None):
     districts.init(app)
     accounts.init(app)
     pamperings.init(app)
+    
+    # Init services
+    TemplateRenderer(app.jinja_env)
+    Emailer(app)
 
     # apply the blueprints to the app
     from supermamas import root, pampering, admin_districts

@@ -1,5 +1,7 @@
 from flask_pymongo import ObjectId
 from flask_login import UserMixin
+from secrets import token_urlsafe
+from datetime import datetime, timedelta
 
 class User(dict, UserMixin):
     def __init__(self, init_dict = None):
@@ -18,6 +20,38 @@ class User(dict, UserMixin):
     @id.setter
     def id(self, value):
         self["_id"] = ObjectId(value)
+
+    @property
+    def is_active(self):
+        activation = self.get("activation")
+        return activation["is_activated"] if activation else False
+
+    @property
+    def activation_code(self):
+        activation = self.get("activation")
+        return activation["code"] if activation else None
+
+    def require_activation(self):
+        self["activation"] = {
+            "is_activated": False,
+            "code": token_urlsafe(16),
+            "expires": datetime.utcnow() + timedelta(days=7)
+        }
+
+    def activate(self, code):
+        activation = self.get("activation")
+        if activation and not self.is_active:
+            if code and activation.get("code") == code:
+                if activation.get("expires") > datetime.utcnow():
+                    self["activation"] = {
+                        "is_activated": True
+                    }
+                else:
+                    raise Exception("Activation code expired")
+            else:
+                raise Exception("Unknown activation code")
+        else:
+            raise Exception("Account cannot be activated")
 
     @property
     def email(self):

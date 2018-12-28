@@ -1,0 +1,9 @@
+    <html>
+    <body>
+        <p>{% trans name=name %}Hi {{ name }},{% endtrans %}<br>
+        {% trans %}Welcome to Supermamas! In order to log in to Supermamas you must first activate 
+        your account: {% endtrans %}<br>
+        <a href="{{ activation_link }}">{% trans %}Activate my Supermamas account{% endtrans %}</a> 
+        </p>
+    </body>
+    </html>

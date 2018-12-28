@@ -4,6 +4,8 @@ from flask_bcrypt import Bcrypt
 from supermamas.accounts.user import User
 from supermamas import districts
 
+# TODO: use alternative tokens
+# https://flask-login.readthedocs.io/en/latest/#alternative-tokens
 def load_user(user_id):
     return AuthenticationService()._repository().get(user_id)
 
@@ -40,21 +42,3 @@ class AuthenticationService:
         else:
             return None
 
-    def register(self, email, password, first_name, last_name, district_id):
-        # Disallow multiple accounts with the same email
-        if self._repository().get_by_email(email):
-            return None
-
-        district = districts.Service().get_district(district_id)
-        if not district:
-            raise Exception("District {} not found", district_id)
-
-        password = self._bcrypt().generate_password_hash(password)
-        user = User()
-        user.email = email
-        user.password = password
-        user.first_name = first_name
-        user.last_name = last_name
-        user.district = district
-
-        return self._repository().insert(user)

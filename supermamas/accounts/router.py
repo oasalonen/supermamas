@@ -1,6 +1,6 @@
-from flask import Blueprint, render_template, redirect, request, flash, Response
+from flask import Blueprint, render_template, redirect, request, flash, Response, session, url_for
 from flask_babel import gettext
-from flask_login import logout_user, login_required, login_user
+from flask_login import logout_user, login_required, login_user, current_user
 from supermamas import accounts, districts
 from supermamas.router_utils import is_safe_url
 from supermamas.accounts.forms.login import LoginForm
@@ -18,7 +18,7 @@ def register():
     form.set_districts(districts.Service().districts())
 
     if request.method == "POST" and form.validate():
-        user = accounts.AuthenticationService().register(
+        user = accounts.RegistrationService().register(
             form.email.data,
             form.password.data,
             form.first_name.data,
@@ -54,3 +54,10 @@ def login():
 def logout():
     logout_user()
     return redirect("/")
+
+@bp.route("/accounts/<user_id>/activation", methods=["GET"])
+def activate_user(user_id):
+    code = request.args.get("code")
+    accounts.RegistrationService().activate_user(user_id, code)
+    flash(gettext(u"Your account has been successfully activated. You may now log in to your account."))
+    return redirect(url_for("accounts.login"))

@@ -20,6 +20,9 @@ class Repository:
         result = self.collection.insert_one(user)
         user.id = str(result.inserted_id)
         return user
+
+    def replace(self, user):
+        self.collection.replace_one({ "_id": ObjectId(user.id) }, user)
     
     def get(self, user_id):
         return User(self.collection.find_one({ "_id": ObjectId(user_id) }))
