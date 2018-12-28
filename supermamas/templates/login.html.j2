@@ -10,6 +10,7 @@
 <form method="post">
     {{ forms.render_field(form.email) }}
     {{ forms.render_field(form.password) }}
+    {{ forms.render_field(form.remember_me) }}
     {{ forms.submit(_("Log in")) }}
 </form>
 

@@ -38,11 +38,11 @@ def login():
     if request.method == "POST" and form.validate():
         user = accounts.AuthenticationService().authenticate(form.email.data, form.password.data)
         if user:
-            login_user(user)
+            login_user(user, remember=form.remember_me.data)
             flash(gettext(u"Logged in as %(name)s", name=user.first_name))
 
             url = request.args.get("next")
-            url = url if is_safe_url(url) else "/"
+            url = url if url and is_safe_url(url) else "/"
             return redirect(url)
         else:
             flash(gettext(u"Invalid login credentials"))
