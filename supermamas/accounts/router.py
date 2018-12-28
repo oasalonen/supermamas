@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, request, flash, Response
 from flask_babel import gettext
 from flask_login import logout_user, login_required, login_user
-from supermamas import accounts
+from supermamas import accounts, districts
 from supermamas.router_utils import is_safe_url
 from supermamas.accounts.forms.login import LoginForm
 from supermamas.accounts.forms.registration import RegistrationForm
@@ -15,13 +15,15 @@ def page_not_found(e):
 @bp.route("/register", methods=("GET", "POST"))
 def register():
     form = RegistrationForm(request.form)
+    form.set_districts(districts.Service().districts())
 
     if request.method == "POST" and form.validate():
         user = accounts.AuthenticationService().register(
             form.email.data,
             form.password.data,
             form.first_name.data,
-            form.last_name.data
+            form.last_name.data,
+            form.district.data
             )
         if user:
             return redirect("/")

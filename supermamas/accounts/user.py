@@ -52,6 +52,17 @@ class User(dict, UserMixin):
         self["last_name"] = value
 
     @property
+    def district(self):
+        return self.get("district")
+
+    @district.setter
+    def district(self, value):
+        self["district"] = {
+            "id": value.id,
+            "name": value.name
+        }
+
+    @property
     def is_admin(self):
         return self.has_role(self.ROLE_ADMIN)
 

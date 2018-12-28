@@ -18,6 +18,9 @@ class Service:
 
     def districts(self):
         return self._repository().get_all()
+
+    def get_district(self, district_id):
+        return self._repository().get(district_id)
     
     def add_district(self, district_name):
         errors = {}
