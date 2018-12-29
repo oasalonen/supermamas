@@ -21,7 +21,7 @@
             <script>
                 var deleteButton = document.getElementById("{{ delete_district_button_id }}");
                 deleteButton.addEventListener("click", function() {
-                    fetch("/admin/districts/{{ district.id }}", {
+                    fetch("/districts/{{ district.id }}", {
                         method: "DELETE"
                     }).then(function(response) {
                         location=location.href

@@ -3,11 +3,13 @@ from flask_login import login_required
 from flask_babel import gettext
 
 from supermamas import districts
+from supermamas.common.router_utils import admin_only
 
-bp = Blueprint("admin_districts", __name__)
+bp = Blueprint("districts", __name__)
 
-@bp.route("/admin/districts", methods=("GET", "POST"))
+@bp.route("/districts", methods=("GET", "POST"))
 @login_required
+@admin_only
 def admin():
     errors = {}
     if request.method == "POST":
@@ -19,7 +21,9 @@ def admin():
 
     return render_template("districts.html.j2", districts=all_districts)
 
-@bp.route("/admin/districts/<district_id>", methods=["DELETE"])
+@bp.route("/districts/<district_id>", methods=["DELETE"])
+@login_required
+@admin_only
 def delete(district_id):
     districts.Service().delete_district(district_id)
     all_districts = districts.Service().districts()

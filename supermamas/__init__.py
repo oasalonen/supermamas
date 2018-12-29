@@ -42,21 +42,19 @@ def create_app(test_config=None):
 
     import logging
     logging.basicConfig()
-
-    # Init services
-    common.init(app)
-
+    
     # initialize domain modules
+    common.init(app)
     districts.init(app)
     accounts.init(app)
     pamperings.init(app)
 
     # apply the blueprints to the app
-    from supermamas import root, pampering, admin_districts
+    from supermamas import root
     app.register_blueprint(root.bp)
     app.register_blueprint(accounts.router.bp)
-    app.register_blueprint(pampering.bp)
-    app.register_blueprint(admin_districts.bp)
+    app.register_blueprint(pamperings.router.bp)
+    app.register_blueprint(districts.router.bp)
 
     app.add_url_rule('/', endpoint='index')
 
