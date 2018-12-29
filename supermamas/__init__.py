@@ -4,22 +4,22 @@ from flask import Flask, request, Response
 from flask_babel import Babel
 from sassutils.wsgi import SassMiddleware
 
-from supermamas import config
-from supermamas import accounts
-from supermamas import pamperings
-from supermamas import districts
-from supermamas.template_renderer import TemplateRenderer
-from supermamas.emailer import Emailer
+from supermamas import config, common, accounts, pamperings, districts
+from supermamas.common.configuration_service import ConfigurationService
 
 def debug(text):
-  print(text)
-  return ''
+    print(text)
+    return ''
+
+def get_config_var(name):
+    return ConfigurationService().get(name)
 
 def create_app(test_config=None):
     """Create and configure an instance of the Flask application."""
     app = Flask(__name__, instance_relative_config=True)
     app.secret_key = config.APP_SECRET
-    app.jinja_env.filters['debug']=debug
+    app.jinja_env.filters["debug"]=debug
+    app.jinja_env.filters["config"]=get_config_var
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
@@ -43,14 +43,13 @@ def create_app(test_config=None):
     import logging
     logging.basicConfig()
 
+    # Init services
+    common.init(app)
+
     # initialize domain modules
     districts.init(app)
     accounts.init(app)
     pamperings.init(app)
-    
-    # Init services
-    TemplateRenderer(app.jinja_env)
-    Emailer(app)
 
     # apply the blueprints to the app
     from supermamas import root, pampering, admin_districts

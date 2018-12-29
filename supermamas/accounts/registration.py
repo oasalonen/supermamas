@@ -3,8 +3,8 @@ from flask_babel import gettext
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-from supermamas.template_renderer import TemplateRenderer
-from supermamas.emailer import Emailer
+from supermamas.common.template_renderer import TemplateRenderer
+from supermamas.common.emailer import Emailer
 from supermamas.accounts.user import User
 from supermamas import districts
 

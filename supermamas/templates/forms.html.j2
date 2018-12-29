@@ -41,3 +41,7 @@
   {% endif %}
   </dd>
 {% endmacro %}
+
+{% macro recaptcha() %}
+    <div class="g-recaptcha" data-sitekey="{{ 'RECAPTCHA_SITE_KEY' | config }}"></div>
+{% endmacro %}

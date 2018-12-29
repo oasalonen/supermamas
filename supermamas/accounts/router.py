@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, request, flash, Response
 from flask_babel import gettext
 from flask_login import logout_user, login_required, login_user, current_user
 from supermamas import accounts, districts
-from supermamas.router_utils import is_safe_url
+from supermamas.common.router_utils import is_safe_url
 from supermamas.accounts.forms.login import LoginForm
 from supermamas.accounts.forms.registration import RegistrationForm
 

@@ -1,6 +1,8 @@
 from wtforms import Form, StringField, PasswordField, validators, ValidationError, SelectField
 from flask_babel import gettext
 
+from supermamas.common.forms.recaptcha import RecaptchaField
+
 password_regex = '''^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[(){}¤'"$@!%*?&])(?=.{8,})'''
 
 class RegistrationForm(Form):
@@ -16,6 +18,7 @@ class RegistrationForm(Form):
     first_name = StringField(gettext(u"First name"), [validators.InputRequired(gettext(u"Please provide your first name"))])
     last_name = StringField(gettext(u"Last name"), [validators.InputRequired(gettext(u"Please provide your last name"))])
     district = SelectField(gettext(u"District"), [validators.InputRequired(gettext(u"Please select your district"))])
+    recaptcha = RecaptchaField()
 
     def validate_verify_password(self, field):
         if (field.data != self.password.data):

@@ -1,0 +1,1 @@
+from supermamas.common.forms.recaptcha import RecaptchaField
