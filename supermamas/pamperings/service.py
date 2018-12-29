@@ -5,6 +5,7 @@ from datetime import datetime, date, timedelta
 from supermamas.pamperings import Signup
 from supermamas.pamperings import Pampering
 from supermamas.accounts import Repository as AccountsRepository
+from supermamas import districts
 
 class Service:
     __instance = None
@@ -62,6 +63,7 @@ class Service:
         if not errors:
             pampering = Pampering()
             pampering.bubble_mama = bubble_mama
+            pampering.district = districts.Service().get_district(bubble_mama.district["id"])
             pampering.available_dates = available_dates
             pampering = self._repository().insert(pampering)
         else:

@@ -28,6 +28,17 @@ class Pampering(dict):
         }
 
     @property
+    def district(self):
+        return self.get("district")
+
+    @district.setter
+    def district(self, value):
+        self["district"] = {
+            "id": value.id,
+            "name": value.name
+        }
+
+    @property
     def available_dates(self):
         return self.get("available_dates")
 

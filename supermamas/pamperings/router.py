@@ -14,7 +14,7 @@ bp = Blueprint("pamperings", __name__)
 @admin_only
 def create():
     errors = {}
-    bubble_mama_id = request.args.get("bubble_mama_id")
+    bubble_mama_id = request.args.get("bubble_mama")
     start_date = None
     end_date = None
 
