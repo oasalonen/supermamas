@@ -23,5 +23,8 @@ class Repository:
     def get(self, pampering_id):
         return Pampering(self.collection.find_one({"_id": ObjectId(pampering_id)}))
 
+    def get_all(self):
+        return [Pampering(pampering) for pampering in self.collection.find()]
+
     def update_field(self, pampering_id, field, value):
         return self.collection.update_one({"_id": ObjectId(pampering_id)}, {"$set": {field: value}})

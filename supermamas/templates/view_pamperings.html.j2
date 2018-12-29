@@ -1,0 +1,45 @@
+{% extends "base.html.j2" %}
+
+{% import "forms.html.j2" as forms %}
+
+{% block header %}
+<h1>{% trans %}Pamperings{% endtrans %}</h1>
+{% endblock %}
+
+{% block content %}
+<section>
+<form method="post">
+    {{ forms.submit(_("Filter")) }}
+</form>
+</section>
+
+<section>
+    <table class="hover">
+        <thead>
+            <tr>
+                <th>{% trans %}Bubble mama{% endtrans %}</th>
+                <th>{% trans %}District{% endtrans %}</th>
+                <th>{% trans %}Start date{% endtrans %}</th>
+                <th>{% trans %}End date{% endtrans %}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for pampering in viewmodel.pamperings %}
+            <tr id="{{ pampering.id }}">
+                <td>{{ pampering.bubble_mama }}</td>
+                <td>{{ pampering.district }}</td>
+                <td>{{ pampering.start_date }}</td>
+                <td>{{ pampering.end_date }}</td>
+            <tr>
+
+            <script>
+                var pamperingRow = document.getElementById("{{ pampering.id }}");
+                pamperingRow.addEventListener("click", function() {
+                    location="{{ pampering.detail_link }}"
+                });
+            </script>
+        {% endfor %}
+        <tbody>
+    </table>
+</section>
+{% endblock %}

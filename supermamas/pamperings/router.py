@@ -5,9 +5,28 @@ from dateutil import rrule, parser
 from datetime import datetime, date
 
 from supermamas import pamperings
+from supermamas.pamperings.forms import PamperingFilterForm
 from supermamas.common.router_utils import admin_only
+from supermamas.pamperings.viewmodels import PamperingListViewModel
 
 bp = Blueprint("pamperings", __name__)
+
+@bp.route("/pamperings", methods=["GET", "POST"])
+@login_required
+@admin_only
+def view_pamperings():
+    form = PamperingFilterForm()
+
+    viewmodel = PamperingListViewModel()
+    viewmodel.set_pamperings(pamperings.Service().get_all_pamperings())
+
+    return render_template("view_pamperings.html.j2", form=form, viewmodel=viewmodel)
+
+@bp.route("/pamperings/<id>", methods=["GET"])
+@login_required
+@admin_only
+def get_details(id):
+    redirect("/")
 
 @bp.route("/pamperings/create", methods=("GET", "POST"))
 @login_required

@@ -23,6 +23,9 @@ class Service:
     def _accounts_repository(self):
         return Service.__instance.accounts_repository
 
+    def get_all_pamperings(self):
+        return self._repository().get_all()
+
     def prepare_pampering(self, bubble_mama_id, start_date=None, end_date=None):
         start_date = start_date if start_date else date.today()
         end_date = end_date if end_date else start_date + timedelta(days=20)

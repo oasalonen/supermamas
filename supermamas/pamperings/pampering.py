@@ -47,6 +47,20 @@ class Pampering(dict):
         self["available_dates"] = dates
 
     @property
+    def start_date(self):
+        if self.available_dates:
+            return sorted(self.available_dates)[0]
+        else:
+            return None
+    
+    @property
+    def end_date(self):
+        if self.available_dates:
+            return sorted(self.available_dates)[-1]
+        else:
+            return None
+
+    @property
     def signups(self):
         return self.get("signups")
 
