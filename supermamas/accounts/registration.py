@@ -6,6 +6,7 @@ from email.mime.multipart import MIMEMultipart
 from supermamas.common.template_renderer import TemplateRenderer
 from supermamas.common.emailer import Emailer
 from supermamas.accounts.user import User
+from supermamas.accounts.admin import Admin
 from supermamas import districts
 
 class RegistrationService:
@@ -50,6 +51,31 @@ class RegistrationService:
         self.send_activation_email(user)
 
         return user
+
+    def register_admin(self, email, password, first_name, last_name, district_id, responsible_districts):
+        # Disallow multiple accounts with the same email
+        if self._repository().get_by_email(email):
+            return None
+
+        district = districts.Service().get_district(district_id)
+        if not district:
+            raise Exception("District {} not found", district_id)
+
+        password = self._bcrypt().generate_password_hash(password)
+        admin = Admin()
+        admin.email = email
+        admin.password = password
+        admin.first_name = first_name
+        admin.last_name = last_name
+        admin.district = district
+
+        responsible_districts = [districts.Service().get_district(id) for id in responsible_districts]
+        for district in responsible_districts:
+            admin.add_responsible_district(district)
+
+        admin = self._repository().insert(admin)
+
+        return admin
 
     def activate_user(self, user_id, code):
         user = self._repository().get(user_id)

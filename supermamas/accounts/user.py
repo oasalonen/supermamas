@@ -100,5 +100,15 @@ class User(dict, UserMixin):
     def is_admin(self):
         return self.has_role(self.ROLE_ADMIN)
 
+    @property
+    def roles(self):
+        return self.get("roles", [])
+        
     def has_role(self, role):
-        return role in self.get("roles", [])
+        return role in self.roles
+
+    def add_role(self, role):
+        if not self.has_role(role):
+            roles = self.roles
+            roles.append(role)
+            self["roles"] = roles

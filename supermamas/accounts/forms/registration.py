@@ -1,11 +1,11 @@
-from wtforms import Form, StringField, PasswordField, validators, ValidationError, SelectField
+from wtforms import Form, StringField, PasswordField, validators, ValidationError, SelectField, SelectMultipleField
 from flask_babel import gettext
 
 from supermamas.common.forms.recaptcha import RecaptchaField
 
 password_regex = '''^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[(){}¤'"$@!%*?&])(?=.{8,})'''
 
-class RegistrationForm(Form):
+class BaseRegistrationForm(Form):
     email = StringField(gettext(u"Email"), [
         validators.Email(gettext(u"Please enter a valid email address")),
         validators.InputRequired(gettext(u"Please enter a valid email address"))
@@ -18,7 +18,6 @@ class RegistrationForm(Form):
     first_name = StringField(gettext(u"First name"), [validators.InputRequired(gettext(u"Please provide your first name"))])
     last_name = StringField(gettext(u"Last name"), [validators.InputRequired(gettext(u"Please provide your last name"))])
     district = SelectField(gettext(u"District"), [validators.InputRequired(gettext(u"Please select your district"))])
-    recaptcha = RecaptchaField()
 
     def validate_verify_password(self, field):
         if (field.data != self.password.data):
@@ -26,3 +25,15 @@ class RegistrationForm(Form):
     
     def set_districts(self, districts):
         self.district.choices = [(district.id, district.name) for district in sorted(districts, key=lambda d: d.name)]
+
+
+class UserRegistrationForm(BaseRegistrationForm):
+    recaptcha = RecaptchaField()
+
+
+class AdminRegistrationForm(BaseRegistrationForm):
+    responsible_districts = SelectMultipleField(gettext(u"Responsible districts"))
+
+    def set_districts(self, districts):
+        super().set_districts(districts)
+        self.responsible_districts.choices = self.district.choices

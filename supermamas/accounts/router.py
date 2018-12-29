@@ -2,35 +2,15 @@ from flask import Blueprint, render_template, redirect, request, flash, Response
 from flask_babel import gettext
 from flask_login import logout_user, login_required, login_user, current_user
 from supermamas import accounts, districts
-from supermamas.common.router_utils import is_safe_url
+from supermamas.common.router_utils import is_safe_url, admin_only
 from supermamas.accounts.forms.login import LoginForm
-from supermamas.accounts.forms.registration import RegistrationForm
+from supermamas.accounts.forms.registration import UserRegistrationForm, AdminRegistrationForm
 
 bp = Blueprint("accounts", __name__)
 
 @bp.errorhandler(401)
 def page_not_found(e):
     return Response("<p>" + gettext(u"Login failed") + "</p>")
-
-@bp.route("/register", methods=("GET", "POST"))
-def register():
-    form = RegistrationForm(request.form)
-    form.set_districts(districts.Service().districts())
-
-    if request.method == "POST" and form.validate():
-        user = accounts.RegistrationService().register(
-            form.email.data,
-            form.password.data,
-            form.first_name.data,
-            form.last_name.data,
-            form.district.data
-            )
-        if user:
-            return redirect("/")
-        else:
-            flash(gettext(u"We could not register your account. Have you already signed up with this email?"))
-
-    return render_template("register.html.j2", form=form)
 
 @bp.route("/login", methods=["GET", "POST"])
 def login():
@@ -55,6 +35,50 @@ def logout():
     logout_user()
     return redirect("/")
 
+@bp.route("/register", methods=("GET", "POST"))
+def register():
+    form = UserRegistrationForm(request.form)
+    form.set_districts(districts.Service().districts())
+
+    if request.method == "POST" and form.validate():
+        user = accounts.RegistrationService().register(
+            form.email.data,
+            form.password.data,
+            form.first_name.data,
+            form.last_name.data,
+            form.district.data
+            )
+        if user:
+            return redirect("/")
+        else:
+            flash(gettext(u"We could not register your account. Have you already signed up with this email?"))
+
+    return render_template("register.html.j2", form=form)
+
+@bp.route("/accounts/registration/admin", methods=["GET", "POST"])
+@login_required
+@admin_only
+def register_admin():
+    form = AdminRegistrationForm(request.form)
+    form.set_districts(districts.Service().districts())
+
+    if request.method == "POST" and form.validate():
+        user = accounts.RegistrationService().register_admin(
+            form.email.data,
+            form.password.data,
+            form.first_name.data,
+            form.last_name.data,
+            form.district.data,
+            form.responsible_districts.data
+            )
+        if user:
+            return redirect("/")
+        else:
+            flash(gettext(u"Something went wrong with the account registration."))
+    
+    return render_template("register_admin.html.j2", form=form)
+
+# Need to do a GET to avoid a creating a form in the activation email
 @bp.route("/accounts/<user_id>/activation", methods=["GET"])
 def activate_user(user_id):
     code = request.args.get("code")
