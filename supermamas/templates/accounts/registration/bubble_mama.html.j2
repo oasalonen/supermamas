@@ -1,0 +1,73 @@
+{% extends "base.html.j2" %}
+
+{% import "forms.html.j2" as forms %}
+
+{% block header %}
+<h1>{% trans %}I want to become a BubbleMama in Berlin{% endtrans %}</h1>
+{% endblock %}
+
+{% block content %}
+<section>
+{# Introduction #}
+</section>
+
+<form method="post">
+    <section>
+        {{ forms.render_field(form.pampering_type) }}
+    </section>
+
+    <section>
+        <h2>{% trans %}Account{% endtrans %}</h2>
+        {{ forms.render_field(form.email) }}
+        {{ forms.render_field(form.password) }}
+        {{ forms.render_field(form.verify_password) }}
+    </section>
+
+    <section>
+        <h2>{% trans %}Contact details{% endtrans %}</h2>
+        {{ forms.render_field(form.first_name) }}
+        {{ forms.render_field(form.last_name) }}
+        {{ forms.render_field(form.phone_number) }}
+        <section>
+            <h3>{% trans %}Address{% endtrans %}</h3>
+            {{ forms.render_field(form.address_line1) }}
+            {{ forms.render_field(form.address_line2) }}
+            {{ forms.render_field(form.postal_code) }}
+            {{ forms.render_field(form.district) }}
+        </section>
+    </section>
+
+    <section>
+        <h2>{% trans %}Information for planning pamperings{% endtrans %}</h2>
+        {{ forms.render_field(form.due_date) }}
+        {{ forms.render_field(form.pampering_start_date) }}
+        {{ forms.render_field(form.baby_name) }}
+        {{ forms.render_field(form.baby_birth_date) }}
+        {{ forms.render_field(form.pampering_days) }}
+        {{ forms.render_field(form.max_pamperings_per_week) }}
+        {{ forms.render_field(form.family_situation) }}
+        {{ forms.render_field(form.food_allergies) }}
+        {{ forms.render_field(form.diet_restrictions) }}
+        {{ forms.render_field(form.languages) }}
+        {{ forms.render_field(form.personal_message) }}
+    </section>
+
+    <section>
+        <h2>{% trans %}Other{% endtrans %}</h2>
+        {{ forms.render_field(form.referrer) }}
+    </section>
+
+    <section>
+        <h2>{% trans %}Terms acceptance{% endtrans %}</h2>
+        {{ forms.render_field(form.accept_contact_detail_sharing) }}
+        {{ forms.render_field(form.accept_welcome_helping_mamas) }}
+        {{ forms.render_field(form.accept_notify_helping_mamas) }}
+        {{ forms.render_field(form.accept_thank_helping_mamas) }}
+        {{ forms.render_field(form.accept_diversity) }}
+        {{ forms.render_field(form.allow_helping_dads) }}
+    </section>
+
+    {{ forms.recaptcha() }}
+    {{ forms.submit(_("Register")) }}
+</form>
+{% endblock %}

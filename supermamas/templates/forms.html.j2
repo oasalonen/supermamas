@@ -30,16 +30,26 @@
 {%- endmacro %}
 
 {% macro render_field(field) %}
-  <dt>{{ field.label }}</dt>
-  <dd>{{ field(**kwargs)|safe }}
-  {% if field.errors %}
-    <ul class=errors>
-    {% for error in field.errors %}
-      <li>{{ error }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-  </dd>
+    <div class="form-field">
+    {% if "BooleanField" in field.type %}
+        <dt class="description">{{ field.description }}</dt>
+        <dd>{{ field(**kwargs)|safe }} {{ field.label }}
+    {% else %}
+        <dt>
+            <div>{{ field.label }}</div>
+            <div>{{ field.description }}</div>
+        </dt>
+        <dd>{{ field(**kwargs)|safe }}
+    {% endif %}
+        {% if field.errors %}
+            <ul class=errors>
+            {% for error in field.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        </dd>
+    </div>
 {% endmacro %}
 
 {% macro recaptcha() %}

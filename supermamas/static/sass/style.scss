@@ -18,6 +18,15 @@ button.stretch, input.stretch {
     width: 100%;
 }
 
+.form-field {
+    ul {
+        margin: 0;
+    }
+    li {
+        list-style-type: none;
+    }
+}
+
 .signup {
     li {
         list-style-type: none;

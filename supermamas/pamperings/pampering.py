@@ -1,5 +1,13 @@
+from enum import Enum
 from flask_pymongo import ObjectId
 from supermamas.pamperings.signup import Signup
+
+class PamperingType(Enum):
+    PRE = "PRE"
+    STANDARD = "STANDARD"
+    BELATED = "BELATED"
+    EMERGENCY = "EMERGENCY"
+    SUPPORT = "SUPPORT"
 
 class Pampering(dict):
     def __init__(self, init_dict=None):

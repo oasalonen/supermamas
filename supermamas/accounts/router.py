@@ -4,7 +4,7 @@ from flask_login import logout_user, login_required, login_user, current_user
 from supermamas import accounts, districts
 from supermamas.common.router_utils import is_safe_url, admin_only
 from supermamas.accounts.forms.login import LoginForm
-from supermamas.accounts.forms.registration import UserRegistrationForm, AdminRegistrationForm
+from supermamas.accounts.forms.registration import BubbleMamaRegistrationForm, AdminRegistrationForm
 
 bp = Blueprint("accounts", __name__)
 
@@ -35,9 +35,9 @@ def logout():
     logout_user()
     return redirect("/")
 
-@bp.route("/register", methods=("GET", "POST"))
-def register():
-    form = UserRegistrationForm(request.form)
+@bp.route("/accounts/registration/bubble_mama", methods=("GET", "POST"))
+def register_bubble_mama():
+    form = BubbleMamaRegistrationForm(request.form)
     form.set_districts(districts.Service().districts())
 
     if request.method == "POST" and form.validate():
@@ -53,7 +53,7 @@ def register():
         else:
             flash(gettext(u"We could not register your account. Have you already signed up with this email?"))
 
-    return render_template("register.html.j2", form=form)
+    return render_template("accounts/registration/bubble_mama.html.j2", form=form)
 
 @bp.route("/accounts/registration/admin", methods=["GET", "POST"])
 @login_required
