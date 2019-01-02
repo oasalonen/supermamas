@@ -2,16 +2,30 @@ from flask_pymongo import ObjectId
 from flask_login import UserMixin
 from secrets import token_urlsafe
 from datetime import datetime, timedelta
+from supermamas.accounts.address import Address
 
 class User(dict, UserMixin):
     def __init__(self, init_dict = None):
+        self.address = Address()
         if init_dict:
             self.update(init_dict)
+
+            address = init_dict.get("address")
+            if address:
+                self.address = address
+
+            bubble_mama_profile = init_dict.get("bubble_mama_profile")
+            if bubble_mama_profile:
+                self.bubble_mama_profile = bubble_mama_profile
         return
 
     @property
     def ROLE_ADMIN(self):
         return "ADMIN"
+
+    @property
+    def ROLE_BUBBLE_MAMA(self):
+        return "BUBBLE_MAMA"
 
     @property
     def id(self):
@@ -86,19 +100,36 @@ class User(dict, UserMixin):
         self["last_name"] = value
 
     @property
-    def district(self):
-        return self.get("district")
+    def phone_number(self):
+        return self.get("postal_code")
 
-    @district.setter
-    def district(self, value):
-        self["district"] = {
-            "id": value.id,
-            "name": value.name
-        }
+    @phone_number.setter
+    def phone_number(self, value):
+        self["phone_number"] = value
+
+    @property
+    def address(self):
+        return self.get("address")
+
+    @address.setter
+    def address(self, value):
+        self["address"] = value
+
+    @property
+    def bubble_mama_profile(self):
+        return self.get("bubble_mama_profile")
+
+    @bubble_mama_profile.setter
+    def bubble_mama_profile(self, value):
+        self["bubble_mama_profile"] = value
 
     @property
     def is_admin(self):
         return self.has_role(self.ROLE_ADMIN)
+
+    @property
+    def is_bubble_mama(self):
+        return self.has_role(self.ROLE_BUBBLE_MAMA)
 
     @property
     def roles(self):

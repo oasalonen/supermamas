@@ -75,13 +75,7 @@ def register_bubble_mama_profile():
     form.set_districts(AreaService().districts())
 
     if request.method == "POST" and form.validate():
-        user = accounts.RegistrationService().register(
-            form.email.data,
-            form.password.data,
-            form.first_name.data,
-            form.last_name.data,
-            form.district.data
-            )
+        user = accounts.RegistrationService().register_bubble_mama(form)
         if user:
             return redirect("/")
         else:

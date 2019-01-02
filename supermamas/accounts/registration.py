@@ -5,8 +5,7 @@ from email.mime.multipart import MIMEMultipart
 
 from supermamas.common.template_renderer import TemplateRenderer
 from supermamas.common.emailer import Emailer
-from supermamas.accounts.user import User
-from supermamas.accounts.admin import Admin
+from supermamas.accounts import User, Admin, Address, BubbleMamaProfile
 from supermamas.areas import AreaService
 
 class RegistrationService:
@@ -29,22 +28,57 @@ class RegistrationService:
     def _app(self):
         return self.__instance.app
 
-    def register(self, email, password, first_name, last_name, district_id):
+    def register_bubble_mama(self, form):
         # Disallow multiple accounts with the same email
-        if self._repository().get_by_email(email):
-            return None
+        if self._repository().get_by_email(form.email.data):
+            return None # Don't raise an exception to leak who is registered
 
-        district = AreaService().get_district(district_id)
+        city = AreaService().get_city(form.city.data)
+        if not city:
+            raise Exception("City {} not found", form.city.data)
+
+        district = AreaService().get_district(form.district.data)
         if not district:
-            raise Exception("District {} not found", district_id)
+            raise Exception("District {} not found", form.district.data)
 
-        password = self._bcrypt().generate_password_hash(password)
         user = User()
-        user.email = email
-        user.password = password
-        user.first_name = first_name
-        user.last_name = last_name
-        user.district = district
+        user.email = form.email.data
+        user.password = self._bcrypt().generate_password_hash(form.password.data)
+        user.first_name = form.first_name.data
+        user.last_name = form.last_name.data
+
+        address = Address()
+        address.address_line1 = form.address_line1.data
+        address.address_line2 = form.address_line2.data
+        address.postal_code = form.postal_code.data
+        address.city = city
+        address.district = district
+        user.address = address
+
+        profile = BubbleMamaProfile()
+        profile.pampering_type = form.pampering_type.data
+        profile.due_date = form.due_date.datetime()
+        profile.pampering_start_date = form.pampering_start_date.datetime()
+        profile.baby_name = form.baby_name.data
+        profile.baby_birth_date = form.baby_birth_date.datetime()
+        profile.preferred_pampering_days = form.pampering_days.options.data
+        profile.max_pamperings_per_week = form.max_pamperings_per_week.data
+        profile.family_situation = form.family_situation.data
+        profile.food_allergies = form.food_allergies.data
+        profile.diet_restrictions = form.diet_restrictions.data
+        profile.languages = form.get_languages()
+        profile.personal_message = form.personal_message.data
+        profile.referrer = form.referrer.data
+        profile.accept_contact_detail_sharing = form.accept_contact_detail_sharing.data
+        profile.accept_welcome_helping_mamas = form.accept_welcome_helping_mamas.data
+        profile.accept_notify_helping_mamas = form.accept_notify_helping_mamas.data
+        profile.accept_thank_helping_mamas = form.accept_thank_helping_mamas.data
+        profile.accept_diversity = form.accept_diversity.data
+        profile.allow_helping_dads = form.allow_helping_dads.data
+        user.bubble_mama_profile = profile
+
+        user.add_role(user.ROLE_BUBBLE_MAMA)
+
         user.require_activation()
 
         user = self._repository().insert(user)

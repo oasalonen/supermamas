@@ -10,10 +10,12 @@ from wtforms import (Form,
     TextAreaField,
     FormField,
     BooleanField,
-    HiddenField)
+    HiddenField,
+    IntegerField)
 from wtforms.widgets import Input
 from wtforms.validators import InputRequired, Email, Regexp
 from flask_babel import gettext
+from re import split
 
 from supermamas.common.forms.recaptcha import RecaptchaField
 from supermamas.pamperings.pampering import PamperingType
@@ -41,11 +43,11 @@ class PamperingTypeForm(Form):
         gettext(u"Type of pampering"), 
         [InputRequired(gettext(u"You must select a pampering type to continue"))],
         choices = [
-            (str(PamperingType.STANDARD), gettext(u"Standard pampering")),
-            (str(PamperingType.PRE), gettext(u"Pre-pampering")),
-            (str(PamperingType.BELATED), gettext(u"Belated pampering")),
-            (str(PamperingType.EMERGENCY), gettext(u"Emergency pampering")),
-            (str(PamperingType.SUPPORT), gettext(u"Support for single mothers"))
+            (PamperingType.STANDARD.value, gettext(u"Standard pampering")),
+            (PamperingType.PRE.value, gettext(u"Pre-pampering")),
+            (PamperingType.BELATED.value, gettext(u"Belated pampering")),
+            (PamperingType.EMERGENCY.value, gettext(u"Emergency pampering")),
+            (PamperingType.SUPPORT.value, gettext(u"Support for single mothers"))
         ])
 
     def __init__(self, city, formdata=None, obj=None, prefix='', data=None, meta=None, **kwargs):
@@ -116,7 +118,7 @@ class BubbleMamaRegistrationForm(UserRegistrationForm):
     max_pamperings_per_week = SelectField(
         gettext("How many visits per week maximum shall we aim for you?"), 
         [InputRequired(gettext(u"Please let us know how many pamperings at most you would like per week"))], 
-        choices=[("1", 1), ("2", 2), ("3", 3)], 
+        choices=[(1, 1), (2, 2), (3, 3)], 
         coerce=int,
         description=gettext(u"With this question we want you to tell us the maximum amount of visits per week you would feel comfortable with. We will not plan more visits per week than you tell us to. Whether we are able to reach the weekly maximum depends on the availability of the HelpingMamas from your neighborhood.")
         )
@@ -184,7 +186,7 @@ class BubbleMamaRegistrationForm(UserRegistrationForm):
 
         self.pampering_days.options.validators = [InputRequired(gettext(u"Please let us know which days of the week suit you best for pamperings"))]
         self.pampering_days.options.choices = [
-            ("all", gettext(u"All days of the week (including weekend)")),
+            ("all days", gettext(u"All days of the week (including weekend)")),
             ("weekdays", gettext(u"Monday to Friday")),
         ]
 
@@ -196,6 +198,13 @@ class BubbleMamaRegistrationForm(UserRegistrationForm):
             ("polish", gettext(u"Polish")), 
             ("spanish", gettext(u"Spanish"))
         ]
+
+    def get_languages(self):
+        other_languages = [x for x in split(",| ", self.languages.other.data) if len(x) > 0]
+        return self.languages.options.data + other_languages
+
+    def get_pampering_days(self):
+        return self.pampering_days.other.data or self.pampering_days.options.data
 
 
 class AdminRegistrationForm(BaseRegistrationForm):

@@ -25,7 +25,9 @@ class Repository:
         self.collection.replace_one({ "_id": ObjectId(user.id) }, user)
     
     def get(self, user_id):
-        return User(self.collection.find_one({ "_id": ObjectId(user_id) }))
+        user = self.collection.find_one({ "_id": ObjectId(user_id) })
+        return User(user) if user else None
 
     def get_by_email(self, email):
-        return User(self.collection.find_one({ "email": email }))
+        user = self.collection.find_one({ "email": email })
+        return User(user) if user else None
