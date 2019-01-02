@@ -6,6 +6,7 @@
 @include foundation-flex-classes;
 @include foundation-button;
 @include foundation-table;
+@include foundation-card;
 
 @import 'custom-checkbox';
 
@@ -18,12 +19,44 @@ button.stretch, input.stretch {
     width: 100%;
 }
 
+form.registration {
+    section {
+        @include card-container($border:0);
+
+        @for $index from 1 through 6 {
+            h#{$index} {
+                @include card-divider;
+            }
+        }
+        .field-collection {
+            @include card-section;
+        }
+    }
+}
+
 .form-field {
+    margin-bottom: 2rem;
+
     ul {
         margin: 0;
     }
     li {
         list-style-type: none;
+    }
+    .heading {
+        label {
+            font-size: 100%;
+            font-weight: 600;
+        }
+    }
+    input, select {
+        margin-bottom: 0rem;
+    }
+    .description {
+        font-size: 80%;
+        color: $dark-gray;
+        font-style: italic;
+        margin-bottom: 0.2rem;
     }
 }
 

@@ -29,26 +29,43 @@
     </div>
 {%- endmacro %}
 
+{% macro render_field_errors(errors) %}
+    {% if errors %}
+        <ul class=errors>
+        {% for error in errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endmacro %}
+
 {% macro render_field(field) %}
     <div class="form-field">
     {% if "BooleanField" in field.type %}
-        <dt class="description">{{ field.description }}</dt>
-        <dd>{{ field(**kwargs)|safe }} {{ field.label }}
+        <dt>
+        {% if field.heading %}
+            <div class="heading">{{ field.heading }}</div>
+        {% endif %}
+        {% if field.description %}
+            <div class="description">{{ field.description }}</div>
+        {% endif %}
+        </dt>
+        <dd>
+            {{ field(**kwargs)|safe }} {{ field.label }}
+            {{ render_field_errors(field.errors) }}
+        </dt>
     {% else %}
         <dt>
-            <div>{{ field.label }}</div>
-            <div>{{ field.description }}</div>
-        </dt>
-        <dd>{{ field(**kwargs)|safe }}
-    {% endif %}
-        {% if field.errors %}
-            <ul class=errors>
-            {% for error in field.errors %}
-            <li>{{ error }}</li>
-            {% endfor %}
-            </ul>
+            <div class="heading">{{ field.label }}</div>
+        {% if field.description %}
+            <div class="description">{{ field.description }}</div>
         {% endif %}
+        </dt>
+        <dd>
+            {{ field(**kwargs)|safe }}
+            {{ render_field_errors(field.errors) }}
         </dd>
+    {% endif %}
     </div>
 {% endmacro %}
 

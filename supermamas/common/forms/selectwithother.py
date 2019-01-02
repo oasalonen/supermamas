@@ -24,8 +24,8 @@ class ListFormField(FormField):
 
 class RadioWithOtherForm(Form):
     options = RadioField("")
-    other = StringField(gettext(u"If other"))
+    other = StringField(gettext(u"Other"))
 
 class SelectWithOtherForm(Form):
     options = SelectMultipleField("")
-    other = StringField(gettext(u"If other"))
+    other = StringField(gettext(u"Other"))

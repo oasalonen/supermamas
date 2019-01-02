@@ -91,7 +91,7 @@ class BubbleMamaRegistrationForm(UserRegistrationForm):
     pampering_days = ListFormField(
         RadioWithOtherForm, 
         gettext(u"Which days are suitable for welcoming your HelpingMamas?"), 
-        description=gettext(u"Your pampering will lasts up to 3 weeks, with 1 to 3 visits per week, depending on the availability of the HelpingMamas from your neighborhood and the answer you give us in the next question.")
+        description=gettext(u"Your pampering will lasts up to 3 weeks, with 1 to 3 visits per week, depending on the availability of the HelpingMamas from your neighborhood and the answer you give us in the next question. For your information: some HelpingMamas can only stop by during the week end.")
         )
     
     max_pamperings_per_week = SelectField(
@@ -161,17 +161,16 @@ class BubbleMamaRegistrationForm(UserRegistrationForm):
         self.pampering_days.options.validators = [InputRequired(gettext(u"Please let us know which days of the week suit you best for pamperings"))]
         self.pampering_days.options.choices = [
             ("all", gettext(u"All days of the week (including weekend)")),
-            ("weekdays", gettext(u"Monday to Friday (for your information: some HelpingMamas can only stop by during the week end)")),
-            ("other", gettext(u"Other")),
+            ("weekdays", gettext(u"Monday to Friday")),
         ]
 
         self.languages.options.validators = [InputRequired(gettext(u"Please select at least one language"))]
         self.languages.options.choices = [
             ("german", gettext(u"German")), 
             ("english", gettext(u"English")), 
+            ("french", gettext(u"French")),
             ("polish", gettext(u"Polish")), 
-            ("spanish", gettext(u"Spanish")), 
-            ("other", gettext(u"Other"))
+            ("spanish", gettext(u"Spanish"))
         ]
 
 
