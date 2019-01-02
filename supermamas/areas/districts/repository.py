@@ -1,6 +1,6 @@
 from flask_pymongo import PyMongo, ObjectId
 
-from supermamas.districts.district import District
+from supermamas.areas.districts import District
 
 class Repository:
     __instance = None

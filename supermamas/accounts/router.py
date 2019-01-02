@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, redirect, request, flash, Response, session, url_for
 from flask_babel import gettext
 from flask_login import logout_user, login_required, login_user, current_user
-from supermamas import accounts, districts
+from supermamas import accounts
+from supermamas.areas import AreaService
 from supermamas.common.router_utils import is_safe_url, admin_only
 from supermamas.accounts.forms.login import LoginForm
 from supermamas.accounts.forms.registration import BubbleMamaRegistrationForm, AdminRegistrationForm
@@ -38,7 +39,7 @@ def logout():
 @bp.route("/accounts/registration/bubble_mama", methods=("GET", "POST"))
 def register_bubble_mama():
     form = BubbleMamaRegistrationForm(request.form)
-    form.set_districts(districts.Service().districts())
+    form.set_districts(AreaService().districts())
 
     if request.method == "POST" and form.validate():
         user = accounts.RegistrationService().register(
@@ -60,7 +61,7 @@ def register_bubble_mama():
 @admin_only
 def register_admin():
     form = AdminRegistrationForm(request.form)
-    form.set_districts(districts.Service().districts())
+    form.set_districts(AreaService().districts())
 
     if request.method == "POST" and form.validate():
         user = accounts.RegistrationService().register_admin(

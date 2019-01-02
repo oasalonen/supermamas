@@ -4,7 +4,7 @@ from flask import Flask, request, Response
 from flask_babel import Babel
 from sassutils.wsgi import SassMiddleware
 
-from supermamas import config, common, accounts, pamperings, districts
+from supermamas import config, common, accounts, pamperings, areas
 from supermamas.common.configuration_service import ConfigurationService
 
 def debug(text):
@@ -45,7 +45,7 @@ def create_app(test_config=None):
     
     # initialize domain modules
     common.init(app)
-    districts.init(app)
+    areas.init(app)
     accounts.init(app)
     pamperings.init(app)
 
@@ -54,7 +54,7 @@ def create_app(test_config=None):
     app.register_blueprint(root.bp)
     app.register_blueprint(accounts.router.bp)
     app.register_blueprint(pamperings.router.bp)
-    app.register_blueprint(districts.router.bp)
+    app.register_blueprint(areas.router.bp)
 
     app.add_url_rule('/', endpoint='index')
 

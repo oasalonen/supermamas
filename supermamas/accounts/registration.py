@@ -7,7 +7,7 @@ from supermamas.common.template_renderer import TemplateRenderer
 from supermamas.common.emailer import Emailer
 from supermamas.accounts.user import User
 from supermamas.accounts.admin import Admin
-from supermamas import districts
+from supermamas.areas import AreaService
 
 class RegistrationService:
     __instance = None
@@ -34,7 +34,7 @@ class RegistrationService:
         if self._repository().get_by_email(email):
             return None
 
-        district = districts.Service().get_district(district_id)
+        district = AreaService().get_district(district_id)
         if not district:
             raise Exception("District {} not found", district_id)
 
@@ -57,7 +57,7 @@ class RegistrationService:
         if self._repository().get_by_email(email):
             return None
 
-        district = districts.Service().get_district(district_id)
+        district = AreaService().get_district(district_id)
         if not district:
             raise Exception("District {} not found", district_id)
 
@@ -69,7 +69,7 @@ class RegistrationService:
         admin.last_name = last_name
         admin.district = district
 
-        responsible_districts = [districts.Service().get_district(id) for id in responsible_districts]
+        responsible_districts = [AreaService().get_district(id) for id in responsible_districts]
         for district in responsible_districts:
             admin.add_responsible_district(district)
 

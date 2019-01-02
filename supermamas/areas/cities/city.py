@@ -1,14 +1,11 @@
 from flask_pymongo import ObjectId
 
-class District(dict):
+class City(dict):
     def __init__(self, init_dict = None):
+        self["districts"] = None
         if init_dict:
             self.update(init_dict)
         return
-
-    @property
-    def ROLE_ADMIN(self):
-        return "ADMIN"
 
     @property
     def id(self):
@@ -25,3 +22,10 @@ class District(dict):
     @name.setter
     def name(self, value):
         self["name"] = value
+
+    @property
+    def districts(self):
+        return self.get("districts")
+
+    def add_district(self, district):
+        self.districts.append(district)

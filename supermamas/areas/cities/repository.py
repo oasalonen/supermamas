@@ -1,0 +1,31 @@
+from flask_pymongo import PyMongo, ObjectId
+
+from supermamas.areas.cities import City
+
+class Repository:
+    __instance = None
+
+    def __new__(cls, app=None):
+        if not Repository.__instance:
+            Repository.__instance = object.__new__(cls)
+            Repository.__instance.app = app
+            Repository.__instance.pymongo = PyMongo(app)
+        return Repository.__instance
+
+    @property
+    def collection(self):
+        return self.pymongo.db.cities
+
+    def insert(self, city):
+        result = self.collection.insert_one(city)
+        city.id = str(result.inserted_id)
+        return city
+
+    def remove(self, city_id):
+        self.collection.delete_one({"_id": ObjectId(city_id)})
+    
+    def get(self, city_id):
+        return City(self.collection.find_one({"_id": ObjectId(city_id)}))
+
+    def get_all(self):
+        return [City(city) for city in self.collection.find()]
