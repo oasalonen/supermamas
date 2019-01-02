@@ -8,13 +8,68 @@
 
 {% block content %}
 <section>
-{# Introduction #}
+    <p>
+        {% trans %}Your personal data will stay confidential at all time. They 
+        will be strictly used by the admin of SuperMamas for internal purposes 
+        only in order to organize the pampering. Don't forget to also read our 
+        <a href="https://supermamasberlin.wordpress.com/questions/">FAQs.</a>
+        {% endtrans %}
+    </p>
+    <p>
+        {% trans %}If you are pregnant and would like to get to know the new mums 
+        in your area, and if you have the time and energy to prepare a meal for a 
+        new mum, we invite you to also
+        <a href="https://supermamasberlin.wordpress.com/become-a-helpingmama/">
+        register as HelpingMama</a>. Only when registered as HelpingMama will you 
+        receive notifications about other mums who just gave birth in your district.
+        {% endtrans %}
+    </p>
+    <p>
+        {% trans %}SuperMamas cannot and does not want to replace the work of a 
+        professional midwife. Due to a lack of midwivery care all over Germany, 
+        please contact midwives in your area as early in your pregnancy as possible. 
+        Doulas and Mütterpflegerinnen are also good and professional options if you 
+        want extra help or have trouble finding a midwife at all.{% endtrans %}
+    </p>
 </section>
+
+{% macro pampering_type_selection_row(label, description) %}
+    <tr>
+        <th>{{ label }}</th>
+        <td>{{ description }}</td>
+    </tr>
+{% endmacro %}
 
 <form method="post" class="registration">
     <section>
-        <h2>{% trans %}Pampering{% endtrans %}</h2>
+        <h2>{% trans %}Which city do you live in?{% endtrans %}</h2>
         <div class="field-collection">
+            <p>
+                {% trans %}Supermamas are based in the following cities. Please select
+                the one in which you would like to be pampered. If your city is not listed,
+                we are unfortunately unable to provide you with a pampering at this time.
+                {% endtrans %}
+            </p>
+            {# {{ forms.render_field(form.city) }} #}
+        </div>
+    </section>
+
+    <section>
+        <h2>{% trans %}What type of pampering are you looking for?{% endtrans %}</h2>
+        <div class="field-collection">
+            <p>
+                {% trans %}Please choose from one of the following pampering options
+                that best describes your situation.{% endtrans %}
+                <table class="hover">
+                    <tbody>
+                        {{ pampering_type_selection_row(_("Standard pampering"), _("You are still pregnant but want to register in advance. The pampering will occur during the first 3 months after birth, duration approx. 3 weeks."))}}
+                        {{ pampering_type_selection_row(_("Pre-pampering"), _("In case of risk of premature birth/mandatory bed rest."))}}
+                        {{ pampering_type_selection_row(_("Belated pampering"), _("Your baby is already born and less than 3 months old."))}}
+                        {{ pampering_type_selection_row(_("Emergency pampering"), _("In case of PPD, loss or handicap"))}}
+                        {{ pampering_type_selection_row(_("Support for single mothers"), _("You are a single mother with one or more babies or toddlers. If you are pregnant or your baby is less than 3 months old, please choose from the other pamperings and let us know that you are single in the \"family situation\" section."))}}
+                    </tbody>
+                </table>
+            </p>
             {{ forms.render_field(form.pampering_type) }}
         </div>
     </section>
@@ -73,6 +128,11 @@
     <section>
         <h2>{% trans %}Terms acceptance{% endtrans %}</h2>
         <div class="field-collection">
+            <p>
+                {% trans %}In order for your pampering to be successful, and because the 
+                SuperMamas network is solely based on the goodwill of others, we need to 
+                ask you to agree to the following conditions:{% endtrans %}
+                </p>
             {{ forms.render_field(form.accept_contact_detail_sharing) }}
             {{ forms.render_field(form.accept_welcome_helping_mamas) }}
             {{ forms.render_field(form.accept_notify_helping_mamas) }}
