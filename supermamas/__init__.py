@@ -4,7 +4,7 @@ from flask import Flask, request, Response
 from flask_babel import Babel
 from sassutils.wsgi import SassMiddleware
 
-from supermamas import config, common, accounts, pamperings, areas
+from supermamas import config
 from supermamas.common.configuration_service import ConfigurationService
 
 def debug(text):
@@ -44,9 +44,16 @@ def create_app(test_config=None):
     logging.basicConfig()
     
     # initialize domain modules
+    from supermamas import common
     common.init(app)
+
+    from supermamas import areas
     areas.init(app)
+
+    from supermamas import accounts
     accounts.init(app)
+
+    from supermamas import pamperings
     pamperings.init(app)
 
     # apply the blueprints to the app

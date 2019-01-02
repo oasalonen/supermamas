@@ -5,7 +5,12 @@ from supermamas import accounts
 from supermamas.areas import AreaService
 from supermamas.common.router_utils import is_safe_url, admin_only
 from supermamas.accounts.forms.login import LoginForm
-from supermamas.accounts.forms.registration import BubbleMamaRegistrationForm, AdminRegistrationForm
+from supermamas.accounts.forms.registration import (
+    BubbleMamaRegistrationForm, 
+    AdminRegistrationForm, 
+    CityForm,
+    PamperingTypeForm)
+from supermamas.accounts.viewmodels import BubbleMamaRegistrationBreadcrumbs
 
 bp = Blueprint("accounts", __name__)
 
@@ -36,9 +41,37 @@ def logout():
     logout_user()
     return redirect("/")
 
-@bp.route("/accounts/registration/bubble_mama", methods=("GET", "POST"))
-def register_bubble_mama():
-    form = BubbleMamaRegistrationForm(request.form)
+@bp.route("/accounts/registration/bubble_mama/intro")
+def register_bubble_mama_intro():
+    breadcrumbs = BubbleMamaRegistrationBreadcrumbs(BubbleMamaRegistrationBreadcrumbs.Step.INTRODUCTION, None, None)
+    return render_template("accounts/registration/bubble_mama_intro.html.j2", breadcrumbs=breadcrumbs)
+
+@bp.route("/accounts/registration/bubble_mama/city", methods=["GET", "POST"])
+def register_bubble_mama_city():
+    form = CityForm(request.form)
+
+    if request.method == "POST" and form.validate():
+        return redirect(url_for("accounts.register_bubble_mama_pampering_type", city=form.city.data))
+
+    breadcrumbs = BubbleMamaRegistrationBreadcrumbs(BubbleMamaRegistrationBreadcrumbs.Step.CITY, None, None)
+    return render_template("accounts/registration/bubble_mama_city.html.j2", form=form, breadcrumbs=breadcrumbs)
+
+@bp.route("/accounts/registration/bubble_mama/pampering_type", methods=["GET", "POST"])
+def register_bubble_mama_pampering_type():
+    form = PamperingTypeForm(request.args.get("city"), request.form)
+
+    if request.method == "POST" and form.validate():
+        return redirect(url_for(
+            "accounts.register_bubble_mama_profile", 
+            city=form.city.data, 
+            pampering_type=form.pampering_type.data))
+
+    breadcrumbs = BubbleMamaRegistrationBreadcrumbs(BubbleMamaRegistrationBreadcrumbs.Step.PAMPERING_TYPE, form.city.data, None)
+    return render_template("accounts/registration/bubble_mama_pampering_type.html.j2", form=form, breadcrumbs=breadcrumbs)
+
+@bp.route("/accounts/registration/bubble_mama/profile", methods=("GET", "POST"))
+def register_bubble_mama_profile():
+    form = BubbleMamaRegistrationForm(request.args.get("city"), request.args.get("pampering_type"), request.form)
     form.set_districts(AreaService().districts())
 
     if request.method == "POST" and form.validate():
@@ -54,7 +87,11 @@ def register_bubble_mama():
         else:
             flash(gettext(u"We could not register your account. Have you already signed up with this email?"))
 
-    return render_template("accounts/registration/bubble_mama.html.j2", form=form)
+    breadcrumbs = BubbleMamaRegistrationBreadcrumbs(
+        BubbleMamaRegistrationBreadcrumbs.Step.PROFILE, 
+        form.city.data, 
+        form.pampering_type.data)
+    return render_template("accounts/registration/bubble_mama_profile.html.j2", form=form, breadcrumbs=breadcrumbs)
 
 @bp.route("/accounts/registration/admin", methods=["GET", "POST"])
 @login_required

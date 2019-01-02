@@ -9,14 +9,16 @@ from wtforms import (Form,
     RadioField,
     TextAreaField,
     FormField,
-    BooleanField)
+    BooleanField,
+    HiddenField)
 from wtforms.widgets import Input
-from wtforms.validators import InputRequired
+from wtforms.validators import InputRequired, Email, Regexp
 from flask_babel import gettext
 
 from supermamas.common.forms.recaptcha import RecaptchaField
 from supermamas.pamperings.pampering import PamperingType
 from supermamas.common.forms import ListFormField, RadioWithOtherForm, SelectWithOtherForm, CalendarField
+from supermamas.areas import AreaService
 
 PASSWORD_REGEX = '''^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[(){}¤'"$@!%*?&])(?=.{8,})'''
 
@@ -26,19 +28,44 @@ class AcceptanceBooleanField(BooleanField):
         validators.append(InputRequired(gettext(u"You must agree to this to sign up")))
         super(AcceptanceBooleanField, self).__init__(label, validators, **kwargs)
 
+class CityForm(Form):
+    city = SelectField(
+        gettext(u"City"), 
+        [InputRequired(gettext(u"Please select your city"))],
+        choices = [(city.id, city.name) for city in AreaService().cities()])
+
+class PamperingTypeForm(Form):
+    city = HiddenField()
+
+    pampering_type = SelectField(
+        gettext(u"Type of pampering"), 
+        [InputRequired(gettext(u"You must select a pampering type to continue"))],
+        choices = [
+            (str(PamperingType.STANDARD), gettext(u"Standard pampering")),
+            (str(PamperingType.PRE), gettext(u"Pre-pampering")),
+            (str(PamperingType.BELATED), gettext(u"Belated pampering")),
+            (str(PamperingType.EMERGENCY), gettext(u"Emergency pampering")),
+            (str(PamperingType.SUPPORT), gettext(u"Support for single mothers"))
+        ])
+
+    def __init__(self, city, formdata=None, obj=None, prefix='', data=None, meta=None, **kwargs):
+        super().__init__(formdata, obj, prefix, data, meta, **kwargs)
+        if city:
+            self.city.data = city
+    
 class BaseRegistrationForm(Form):
     email = StringField(gettext(u"Email"), [
-        validators.Email(gettext(u"Please enter a valid email address")),
-        validators.InputRequired(gettext(u"Please enter a valid email address"))
+        Email(gettext(u"Please enter a valid email address")),
+        InputRequired(gettext(u"Please enter a valid email address"))
         ])
     password = PasswordField(gettext(u"Password"), [
-        validators.Regexp(regex=PASSWORD_REGEX, message=gettext(u"Please enter a valid password")),
-        validators.InputRequired(gettext(u"Please enter a valid password"))
+        Regexp(regex=PASSWORD_REGEX, message=gettext(u"Please enter a valid password")),
+        InputRequired(gettext(u"Please enter a valid password"))
         ])
-    verify_password = PasswordField(gettext(u"Re-enter your password"), [validators.InputRequired(gettext(u"Re-enter your password"))])
-    first_name = StringField(gettext(u"First name"), [validators.InputRequired(gettext(u"Please provide your first name"))])
-    last_name = StringField(gettext(u"Last name"), [validators.InputRequired(gettext(u"Please provide your last name"))])
-    district = SelectField(gettext(u"District"), [validators.InputRequired(gettext(u"Please select your district"))])
+    verify_password = PasswordField(gettext(u"Re-enter your password"), [InputRequired(gettext(u"Re-enter your password"))])
+    first_name = StringField(gettext(u"First name"), [InputRequired(gettext(u"Please provide your first name"))])
+    last_name = StringField(gettext(u"Last name"), [InputRequired(gettext(u"Please provide your last name"))])
+    district = SelectField(gettext(u"District"), [InputRequired(gettext(u"Please select your district"))])
 
     def validate_verify_password(self, field):
         if (field.data != self.password.data):
@@ -53,16 +80,8 @@ class UserRegistrationForm(BaseRegistrationForm):
 
 
 class BubbleMamaRegistrationForm(UserRegistrationForm):
-    pampering_type = RadioField(
-        gettext(u"Type of pampering"), 
-        [InputRequired(gettext(u"Please select the type of pampering you want"))],
-        choices = [
-            (PamperingType.PRE, gettext(u"Pre-pampering")),
-            (PamperingType.STANDARD, gettext(u"Standard pampering")),
-            (PamperingType.BELATED, gettext(u"Belated pampering")),
-            (PamperingType.EMERGENCY, gettext(u"Emergency pampering")),
-            (PamperingType.SUPPORT, gettext(u"Support for single mothers"))
-        ])
+    city = HiddenField()
+    pampering_type = HiddenField()
 
     address_line1 = StringField(
         gettext(u"Street address"), 
@@ -155,8 +174,13 @@ class BubbleMamaRegistrationForm(UserRegistrationForm):
         ],
         description=gettext(u"We have received spontaneous requests from dads who also would like to help. We find this idea wonderful: it is a great way to increase the amount of help for the BubbleMamas and the new dads can connect with the \"HelpingDads\" at the same time and also get support from them. If we send a HelpingDad to pamper you, we would ask him to arrange with you a visit at a time when your husband/partner is also at home. What do you think? Would you be open to receive help from HelpingDads?"))
 
-    def __init__(self, formdata=None, obj=None, prefix='', data=None, meta=None, **kwargs):
+    def __init__(self, city, pampering_type, formdata=None, obj=None, prefix='', data=None, meta=None, **kwargs):
         super().__init__(formdata, obj, prefix, data, meta, **kwargs)
+
+        if city:
+            self.city.data = city
+        if pampering_type:
+            self.pampering_type.data = pampering_type
 
         self.pampering_days.options.validators = [InputRequired(gettext(u"Please let us know which days of the week suit you best for pamperings"))]
         self.pampering_days.options.choices = [

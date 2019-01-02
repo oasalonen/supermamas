@@ -9,7 +9,7 @@
       <li><span>{{ g.user['username'] }}</span>
       <li><a href="{{ url_for('accounts.logout') }}">Log Out</a>
     {% else %}
-      <li><a href="{{ url_for('accounts.register_bubble_mama') }}">Register</a>
+      <li><a href="{{ url_for('accounts.register_bubble_mama_intro') }}">Register</a>
       <li><a href="{{ url_for('accounts.login') }}">Log In</a>
     {% endif %}
   </ul>

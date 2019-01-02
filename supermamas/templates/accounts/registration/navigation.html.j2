@@ -1,0 +1,20 @@
+
+{% macro breadcrumb(step) %}
+    {% if step.is_current %}
+        <li>{{ step.label }}</li>
+    {% elif step.is_disabled %}
+        <li class="disabled">{{ step.label }}</li>
+    {% else %}
+        <li><a href="{{ step.link }}">{{ step.label }}</a></li>
+    {% endif %}
+{% endmacro %}
+
+{% macro breadcrumbs(steps) %}
+<nav aria-labelledby="{{ _('Registration step') }}" role="navigation">
+    <ul class="breadcrumbs">
+    {% for step in steps %}
+        {{ breadcrumb(step) }}
+    {% endfor %}
+    </ul>
+</nav>
+{% endmacro %}

@@ -1,0 +1,27 @@
+{% extends "base.html.j2" %}
+
+{% import "forms.html.j2" as forms %}
+{% import "accounts/registration/navigation.html.j2" as navigation %}
+
+{% block header %}
+{{ navigation.breadcrumbs(breadcrumbs.steps) }}
+<h1>{% trans %}I want to become a BubbleMama{% endtrans %}</h1>
+{% endblock %}
+
+{% block content %}
+<form method="post" class="registration">
+    <section>
+        <h2>{% trans %}Which city do you live in?{% endtrans %}</h2>
+        <div class="field-collection">
+            <p>
+                {% trans %}Supermamas are based in the following cities. Please select
+                the one in which you would like to be pampered. If your city is not listed,
+                we are unfortunately unable to provide you with a pampering at this time.
+                {% endtrans %}
+            </p>
+            {{ forms.render_field(form.city) }}
+        </div>
+    </section>
+    {{ forms.submit(_("Next")) }}
+</form>
+{% endblock %}
