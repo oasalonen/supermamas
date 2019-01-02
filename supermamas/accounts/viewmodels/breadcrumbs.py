@@ -17,7 +17,7 @@ class BubbleMamaRegistrationBreadcrumbs(dict):
     def properties(self, step, current_step, city, pampering_type):
         switcher = {
             self.Step.INTRODUCTION: {
-                "label": gettext(u"Introduction"),
+                "label": gettext(u"Become a BubbleMama"),
                 "link": url_for("accounts.register_bubble_mama_intro"),
                 "is_current": current_step == self.Step.INTRODUCTION,
                 "is_disabled": current_step < self.Step.INTRODUCTION 
