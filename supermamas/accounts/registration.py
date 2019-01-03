@@ -57,10 +57,7 @@ class RegistrationService:
 
         profile = BubbleMamaProfile()
         profile.pampering_type = form.pampering_type.data
-        profile.due_date = form.due_date.datetime()
         profile.pampering_start_date = form.pampering_start_date.datetime()
-        profile.baby_name = form.baby_name.data
-        profile.baby_birth_date = form.baby_birth_date.datetime()
         profile.preferred_pampering_days = form.pampering_days.options.data
         profile.max_pamperings_per_week = form.max_pamperings_per_week.data
         profile.family_situation = form.family_situation.data
@@ -75,6 +72,14 @@ class RegistrationService:
         profile.accept_thank_helping_mamas = form.accept_thank_helping_mamas.data
         profile.accept_diversity = form.accept_diversity.data
         profile.allow_helping_dads = form.allow_helping_dads.data
+
+        if hasattr(form, "due_date"):
+            profile.due_date = form.due_date.datetime()
+        if hasattr(form, "baby_birth_date"):
+            profile.baby_birth_date = form.baby_birth_date.datetime()
+        if hasattr(form, "baby_name"):
+            profile.baby_name = form.baby_name.data
+
         user.bubble_mama_profile = profile
 
         user.add_role(user.ROLE_BUBBLE_MAMA)

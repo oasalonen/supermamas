@@ -25,7 +25,8 @@ class Repository:
         self.collection.delete_one({"_id": ObjectId(city_id)})
     
     def get(self, city_id):
-        return City(self.collection.find_one({"_id": ObjectId(city_id)}))
+        city = self.collection.find_one({"_id": ObjectId(city_id)})
+        return City(city) if city else None
 
     def get_all(self):
         return [City(city) for city in self.collection.find()]

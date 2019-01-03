@@ -1,10 +1,16 @@
 from flask_pymongo import ObjectId
+from supermamas.areas import District
 
 class City(dict):
     def __init__(self, init_dict = None):
         self["districts"] = None
         if init_dict:
             self.update(init_dict)
+
+            districts = init_dict.get("districts")
+            if districts:
+                self["districts"] = [District(district) for district in districts]
+            
         return
 
     @property

@@ -1,4 +1,13 @@
-from wtforms import Field, FormField, StringField, RadioField, Form, FormField, BooleanField, SelectMultipleField
+from wtforms import (
+    Field, 
+    FormField, 
+    StringField, 
+    RadioField, 
+    Form, 
+    FormField, 
+    BooleanField, 
+    SelectMultipleField,
+    ValidationError)
 from wtforms.widgets import html_params, HTMLString
 from flask_babel import gettext
 
@@ -22,9 +31,45 @@ class DivWidget(object):
 class ListFormField(FormField):
     widget = DivWidget()
 
+class OtherField(StringField):
+    parent = None
+
+    def __call__(self, **kwargs):
+        group = self.parent.options.id
+        sanitized_group = group.replace("-", "_")
+        other_id = self.id
+        other = "Other"
+        script = '''
+        <script>
+        var check_other_%s = function() {
+            var checkedRadio = document.querySelector('input[name="%s"]:checked');
+            var otherInput = document.getElementById("%s");
+            otherInput.disabled = !checkedRadio || checkedRadio.value !== "%s";
+        };
+
+        check_other_%s();
+
+        document.getElementsByName("%s").forEach(function (radio) {
+            radio.addEventListener("change", check_other_%s);
+        });
+        </script>
+        ''' % (sanitized_group, group, other_id, other, sanitized_group, group, sanitized_group)
+
+        return super().__call__(**kwargs) + script
+
 class RadioWithOtherForm(Form):
+    is_input_required = False
     options = RadioField("")
-    other = StringField(gettext(u"Other"))
+    other = OtherField(gettext(u"Other"))
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.other.parent = self
+
+    def validate_other(self, field):
+        if self.is_input_required:
+            if (not self.options.data) or (self.options.data == "Other" and not self.other.data):
+                raise ValidationError(gettext(u"Please select an option or fill in the \"Other\" field"))
 
 class SelectWithOtherForm(Form):
     options = SelectMultipleField("")

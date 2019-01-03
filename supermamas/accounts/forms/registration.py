@@ -24,6 +24,16 @@ from supermamas.areas import AreaService
 
 PASSWORD_REGEX = '''^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[(){}¤'"$@!%*?&])(?=.{8,})'''
 
+def get_form_for_pampering_type(pampering_type, city, form):
+    if pampering_type == PamperingType.PRE.value or pampering_type == PamperingType.STANDARD.value:
+        return PreBirthRegistrationForm(city, pampering_type, form)
+    elif (pampering_type == PamperingType.BELATED.value or 
+        pampering_type == PamperingType.SUPPORT.value or
+        pampering_type == PamperingType.EMERGENCY.value):
+        return PostBirthRegistrationForm(city, pampering_type, form)
+    else:
+        raise Exception("Unknown pampering type {}", pampering_type)
+
 class AcceptanceBooleanField(BooleanField):
     def __init__(self, label=None, validators=[], false_values=None, **kwargs):
         label = label or gettext(u"I understand and agree")
@@ -68,21 +78,30 @@ class BaseRegistrationForm(Form):
     first_name = StringField(gettext(u"First name"), [InputRequired(gettext(u"Please provide your first name"))])
     last_name = StringField(gettext(u"Last name"), [InputRequired(gettext(u"Please provide your last name"))])
     district = SelectField(gettext(u"District"), [InputRequired(gettext(u"Please select your district"))])
+    city = HiddenField()
 
     def validate_verify_password(self, field):
         if (field.data != self.password.data):
             raise ValidationError(gettext(u"The re-entered password did not match the original"))
-    
-    def set_districts(self, districts):
+
+    def __init__(self, city, formdata=None, obj=None, prefix='', data=None, meta=None, **kwargs):
+        super().__init__(formdata, obj, prefix, data, meta, **kwargs)
+
+        if city:
+            self.city.data = city
+
+        districts = AreaService().get_city(city).districts
         self.district.choices = [(district.id, district.name) for district in sorted(districts, key=lambda d: d.name)]
 
 
 class UserRegistrationForm(BaseRegistrationForm):
     recaptcha = RecaptchaField()
 
+    def __init__(self, city, formdata=None, obj=None, prefix='', data=None, meta=None, **kwargs):
+        super().__init__(city, formdata, obj, prefix, data, meta, **kwargs)
+
 
 class BubbleMamaRegistrationForm(UserRegistrationForm):
-    city = HiddenField()
     pampering_type = HiddenField()
 
     address_line1 = StringField(
@@ -98,16 +117,10 @@ class BubbleMamaRegistrationForm(UserRegistrationForm):
     phone_number = StringField(
         gettext(u"Phone number"), 
         [InputRequired(gettext(u"Please provide your phone number"))])
-    # TODO: validate that one of the following dates exist
-    due_date = CalendarField(gettext(u"Expected due date"))
 
     pampering_start_date = CalendarField(
         gettext(u"Start of pampering"),
         description=gettext(u"Kindly keep in mind that we need 2 weeks notice for organizing your pampering."))
-
-    baby_name = StringField(gettext(u"Your baby's name"))
-
-    baby_birth_date = CalendarField(gettext(u"Your baby's date of birth"))
 
     pampering_days = ListFormField(
         RadioWithOtherForm, 
@@ -177,26 +190,24 @@ class BubbleMamaRegistrationForm(UserRegistrationForm):
         description=gettext(u"We have received spontaneous requests from dads who also would like to help. We find this idea wonderful: it is a great way to increase the amount of help for the BubbleMamas and the new dads can connect with the \"HelpingDads\" at the same time and also get support from them. If we send a HelpingDad to pamper you, we would ask him to arrange with you a visit at a time when your husband/partner is also at home. What do you think? Would you be open to receive help from HelpingDads?"))
 
     def __init__(self, city, pampering_type, formdata=None, obj=None, prefix='', data=None, meta=None, **kwargs):
-        super().__init__(formdata, obj, prefix, data, meta, **kwargs)
+        super().__init__(city, formdata, obj, prefix, data, meta, **kwargs)
 
-        if city:
-            self.city.data = city
         if pampering_type:
             self.pampering_type.data = pampering_type
 
-        self.pampering_days.options.validators = [InputRequired(gettext(u"Please let us know which days of the week suit you best for pamperings"))]
+        self.pampering_days.form.is_input_required = True
         self.pampering_days.options.choices = [
-            ("all days", gettext(u"All days of the week (including weekend)")),
-            ("weekdays", gettext(u"Monday to Friday")),
+            ("All days", gettext(u"All days of the week (including weekend)")),
+            ("Weekdays", gettext(u"Monday to Friday")),
+            ("Other", gettext(u"Other"))
         ]
 
-        self.languages.options.validators = [InputRequired(gettext(u"Please select at least one language"))]
         self.languages.options.choices = [
-            ("german", gettext(u"German")), 
-            ("english", gettext(u"English")), 
-            ("french", gettext(u"French")),
-            ("polish", gettext(u"Polish")), 
-            ("spanish", gettext(u"Spanish"))
+            ("German", gettext(u"German")), 
+            ("English", gettext(u"English")), 
+            ("French", gettext(u"French")),
+            ("Polish", gettext(u"Polish")), 
+            ("Spanish", gettext(u"Spanish"))
         ]
 
     def get_languages(self):
@@ -206,10 +217,23 @@ class BubbleMamaRegistrationForm(UserRegistrationForm):
     def get_pampering_days(self):
         return self.pampering_days.other.data or self.pampering_days.options.data
 
+class PreBirthRegistrationForm(BubbleMamaRegistrationForm):
+    due_date = CalendarField(
+        gettext(u"Expected due date"),
+        [InputRequired(gettext(u"Please fill in this field"))])
+
+class PostBirthRegistrationForm(BubbleMamaRegistrationForm):
+    baby_name = StringField(
+        gettext(u"Your baby's name"),
+        [InputRequired(gettext(u"Please fill in this field"))])
+
+    baby_birth_date = CalendarField(
+        gettext(u"Your baby's date of birth"),
+        [InputRequired(gettext(u"Please fill in this field"))])
 
 class AdminRegistrationForm(BaseRegistrationForm):
     responsible_districts = SelectMultipleField(gettext(u"Responsible districts"))
 
-    def set_districts(self, districts):
-        super().set_districts(districts)
+    def __init__(self, city, formdata=None, obj=None, prefix='', data=None, meta=None, **kwargs):
+        super().__init__(city, formdata, obj, prefix, data, meta, **kwargs)
         self.responsible_districts.choices = self.district.choices

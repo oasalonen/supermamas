@@ -9,7 +9,8 @@ from supermamas.accounts.forms.registration import (
     BubbleMamaRegistrationForm, 
     AdminRegistrationForm, 
     CityForm,
-    PamperingTypeForm)
+    PamperingTypeForm,
+    get_form_for_pampering_type)
 from supermamas.accounts.viewmodels import BubbleMamaRegistrationBreadcrumbs
 
 bp = Blueprint("accounts", __name__)
@@ -71,8 +72,7 @@ def register_bubble_mama_pampering_type():
 
 @bp.route("/accounts/registration/bubble_mama/profile", methods=("GET", "POST"))
 def register_bubble_mama_profile():
-    form = BubbleMamaRegistrationForm(request.args.get("city"), request.args.get("pampering_type"), request.form)
-    form.set_districts(AreaService().districts())
+    form = get_form_for_pampering_type(request.args.get("pampering_type"), request.args.get("city"), request.form)
 
     if request.method == "POST" and form.validate():
         user = accounts.RegistrationService().register_bubble_mama(form)
@@ -91,8 +91,7 @@ def register_bubble_mama_profile():
 @login_required
 @admin_only
 def register_admin():
-    form = AdminRegistrationForm(request.form)
-    form.set_districts(AreaService().districts())
+    form = AdminRegistrationForm(request.args.get("city"), request.form)
 
     if request.method == "POST" and form.validate():
         user = accounts.RegistrationService().register_admin(
