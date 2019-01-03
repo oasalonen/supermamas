@@ -64,15 +64,24 @@ class PamperingTypeForm(Form):
             self.city.data = city
     
 class BaseRegistrationForm(Form):
-    email = StringField(gettext(u"Email"), [
+    email = StringField(
+        gettext(u"Email"), [
         Email(gettext(u"Please enter a valid email address")),
         InputRequired(gettext(u"Please enter a valid email address"))
         ])
-    password = PasswordField(gettext(u"Password"), [
-        PasswordValidator(),
-        InputRequired(gettext(u"Please enter a valid password"))
-        ])
-    verify_password = PasswordField(gettext(u"Re-enter your password"), [InputRequired(gettext(u"Re-enter your password"))])
+
+    password = PasswordField(
+        gettext(u"Password"), 
+        [PasswordValidator(), InputRequired(gettext(u"Please enter a valid password"))],
+        description=gettext(u"A valid password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one special character.")
+        )
+
+    verify_password = PasswordField(
+        gettext(u"Re-enter your password"), 
+        [InputRequired(gettext(u"Re-enter your password"))],
+        description=gettext(u"Type your password again exactly as before to make sure it's correct.")
+        )
+
     first_name = StringField(gettext(u"First name"), [InputRequired(gettext(u"Please provide your first name"))])
     last_name = StringField(gettext(u"Last name"), [InputRequired(gettext(u"Please provide your last name"))])
     district = SelectField(gettext(u"District"), [InputRequired(gettext(u"Please select your district"))])
