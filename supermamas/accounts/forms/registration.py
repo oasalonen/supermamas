@@ -19,10 +19,8 @@ from re import split
 
 from supermamas.common.forms.recaptcha import RecaptchaField
 from supermamas.pamperings.pampering import PamperingType
-from supermamas.common.forms import ListFormField, RadioWithOtherForm, SelectWithOtherForm, CalendarField
+from supermamas.common.forms import ListFormField, RadioWithOtherForm, SelectWithOtherForm, CalendarField, PasswordValidator
 from supermamas.areas import AreaService
-
-PASSWORD_REGEX = '''^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[(){}¤'"$@!%*?&])(?=.{8,})'''
 
 def get_form_for_pampering_type(pampering_type, city, form):
     if pampering_type == PamperingType.PRE.value or pampering_type == PamperingType.STANDARD.value:
@@ -71,7 +69,7 @@ class BaseRegistrationForm(Form):
         InputRequired(gettext(u"Please enter a valid email address"))
         ])
     password = PasswordField(gettext(u"Password"), [
-        Regexp(regex=PASSWORD_REGEX, message=gettext(u"Please enter a valid password")),
+        PasswordValidator(),
         InputRequired(gettext(u"Please enter a valid password"))
         ])
     verify_password = PasswordField(gettext(u"Re-enter your password"), [InputRequired(gettext(u"Re-enter your password"))])
