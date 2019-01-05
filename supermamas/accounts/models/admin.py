@@ -1,4 +1,4 @@
-from supermamas.accounts.user import User
+from supermamas.accounts.models.user import User
 from supermamas.areas import District
 
 class Admin(User):

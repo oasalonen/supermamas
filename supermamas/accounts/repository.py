@@ -1,6 +1,6 @@
 from flask_pymongo import PyMongo, ObjectId
 
-from supermamas.accounts.user import User
+from supermamas.accounts import User
 
 class Repository:
     __instance = None

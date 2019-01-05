@@ -2,7 +2,7 @@ from flask_pymongo import ObjectId
 from flask_login import UserMixin
 from secrets import token_urlsafe
 from datetime import datetime, timedelta
-from supermamas.accounts.address import Address
+from supermamas.accounts.models.address import Address
 
 class User(dict, UserMixin):
     def __init__(self, init_dict = None):

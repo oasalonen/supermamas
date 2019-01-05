@@ -1,7 +1,7 @@
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 
-from supermamas.accounts.user import User
+from supermamas.accounts import User
 
 # TODO: use alternative tokens
 # https://flask-login.readthedocs.io/en/latest/#alternative-tokens
