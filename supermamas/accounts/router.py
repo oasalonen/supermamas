@@ -5,12 +5,15 @@ from supermamas import accounts
 from supermamas.areas import AreaService
 from supermamas.common.router_utils import is_safe_url, admin_only
 from supermamas.accounts.forms.login import LoginForm
-from supermamas.accounts.forms.registration import (
-    BubbleMamaRegistrationForm, 
-    AdminRegistrationForm, 
-    CityForm,
+from supermamas.accounts.forms.bubble_mama_registration import (
+    BubbleMamaRegistrationForm,
     PamperingTypeForm,
-    get_form_for_pampering_type)
+    get_form_for_pampering_type
+    )
+from supermamas.accounts.forms.registration import (
+    AdminRegistrationForm, 
+    CityForm
+    )
 from supermamas.accounts.viewmodels import BubbleMamaRegistrationBreadcrumbs
 
 bp = Blueprint("accounts", __name__)

@@ -55,7 +55,6 @@
 
 {% macro render_field(field) %}
     <div class="form-field">
-    {{ field.label | debug }}
     {% if "BooleanField" in field.type %}
         <dt>
         {% if field.heading %}
