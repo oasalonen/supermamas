@@ -127,6 +127,7 @@ class BubbleMamaRegistrationForm(UserRegistrationForm):
 
     pampering_start_date = CalendarField(
         gettext(u"Start of pampering"),
+        [InputRequired(gettext(u"Please provide a date"))],
         description=gettext(u"Kindly keep in mind that we need 2 weeks notice for organizing your pampering."))
 
     pampering_days = ListFormField(
@@ -202,13 +203,15 @@ class BubbleMamaRegistrationForm(UserRegistrationForm):
         if pampering_type:
             self.pampering_type.data = pampering_type
 
-        self.pampering_days.form.is_input_required = True
+        self.pampering_days.form.set_required(True)
+        self.pampering_days.flags.required = True
         self.pampering_days.options.choices = [
             ("All days", gettext(u"All days of the week (including weekend)")),
             ("Weekdays", gettext(u"Monday to Friday")),
             ("Other", gettext(u"Other"))
         ]
 
+        self.languages.flags.required = True
         self.languages.options.choices = [
             ("German", gettext(u"German")), 
             ("English", gettext(u"English")), 

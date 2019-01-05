@@ -58,7 +58,6 @@ class OtherField(StringField):
         return super().__call__(**kwargs) + script
 
 class RadioWithOtherForm(Form):
-    is_input_required = False
     options = RadioField("")
     other = OtherField(gettext(u"Other"))
 
@@ -66,8 +65,11 @@ class RadioWithOtherForm(Form):
         super().__init__(**kwargs)
         self.other.parent = self
 
+    def set_required(self, required):
+        self.options.flags.required = True
+
     def validate_other(self, field):
-        if self.is_input_required:
+        if self.options.flags.required:
             if (not self.options.data) or (self.options.data == "Other" and not self.other.data):
                 raise ValidationError(gettext(u"Please select an option or fill in the \"Other\" field"))
 

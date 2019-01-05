@@ -3,33 +3,54 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.scss.css') }}">
 <script src='https://www.google.com/recaptcha/api.js'></script>
 
-<nav class="top-bar">
-  <div class="top-bar-left">
-    <ul class="menu">
-      <li><h4><a href="{{ url_for('index') }}">Supermamas</a></h4></li>
-    </ul>
-  </div>
-  <div class="top-bar-right">
-    <ul class="menu">
-      {% if g.user %}
-        <li><span>{{ g.user['username'] }}</span></li>
-        <li><a href="{{ url_for('accounts.logout') }}">Log Out</a></li>
-      {% else %}
-        <li><a href="{{ url_for('accounts.register_bubble_mama_intro') }}">Register</a></li>
-        <li><a href="{{ url_for('accounts.login') }}">Log In</a></li>
-      {% endif %}
-    </ul>
-    <div id="status">
+<body>
+<div class="root grid-y">
+
+  <nav class="top-bar cell">
+    <div class="top-bar-left">
+      <ul class="menu">
+        <li><h3><a href="{{ url_for('index') }}">Supermamas</a></h3></li>
+      </ul>
+    </div>
+    <div class="top-bar-right">
+      <ul class="menu">
+        {% if g.user %}
+          <li><span>{{ g.user['username'] }}</span></li>
+          <li><a href="{{ url_for('accounts.logout') }}">Log Out</a></li>
+        {% else %}
+          <li><a href="{{ url_for('accounts.register_bubble_mama_intro') }}">Register</a></li>
+          <li><a href="{{ url_for('accounts.login') }}">Log In</a></li>
+        {% endif %}
+      </ul>
+      <div id="status">
+      </div>
+    </div>
+  </nav>
+
+  <div class="cell">
+    <div class="grid-container">
+      <div class="main grid-y">
+
+        <header class="cell">
+          {% block header %}
+          {% endblock %}
+        </header>
+
+        <div class="cell content">
+          {% for message in get_flashed_messages() %}
+            <div class="flash">{{ message }}</div>
+          {% endfor %}
+        
+          {% block content %}
+          {% endblock %}
+        </div>
+
+      </div>
     </div>
   </div>
-</nav>
 
-<section class="content">
-  <header>
-    {% block header %}{% endblock %}
-  </header>
-  {% for message in get_flashed_messages() %}
-    <div class="flash">{{ message }}</div>
-  {% endfor %}
-  {% block content %}{% endblock %}
-</section>
+  <footer class="main-footer cell auto">
+    <p>footer text</p>
+  </footer>
+  </div>
+</body>

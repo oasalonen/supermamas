@@ -1,3 +1,8 @@
+
+@import 'settings';
+
+$card-divider-background: $banner-color;
+
 @import 'foundation-sites/scss/foundation';
 @include foundation-global-styles;
 @include foundation-forms;
@@ -13,6 +18,7 @@
 @include foundation-menu;
 
 @import 'custom-checkbox';
+@import 'base';
 
 ul.grid-x, ul.cell {
     margin: 0;
@@ -30,11 +36,18 @@ form.registration {
         @for $index from 1 through 6 {
             h#{$index} {
                 @include card-divider;
+                color: $white;
+                padding: 1rem;
             }
         }
         .field-collection {
             @include card-section;
         }
+    }
+    input.submit {
+        color: $white;
+        width: 100%;
+        padding: 2rem;
     }
 }
 
@@ -47,6 +60,13 @@ form.registration {
     li {
         list-style-type: none;
     }
+    label {
+        display: inline;
+        margin-right: 0rem;
+    }
+    span.required {
+        color: $alert-color;
+    }
     .heading {
         label {
             font-size: 100%;
@@ -56,10 +76,8 @@ form.registration {
     input, select {
         margin-bottom: 0rem;
     }
-    .description {
-        font-size: 80%;
-        color: $dark-gray;
-        font-style: italic;
+    .help-text {
+        margin-top: 0.0rem;
         margin-bottom: 0.2rem;
     }
 }

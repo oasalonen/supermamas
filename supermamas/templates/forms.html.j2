@@ -16,7 +16,15 @@
 {%- endmacro %}
 
 {%- macro submit(value, name="", class="") -%}
-    <input type="submit" class="button success {{ class }}" value="{{ value }}" name="{{ name }}" /> 
+    <input type="submit" class="button success submit {{ class }}" value="{{ value }}" name="{{ name }}" /> 
+{%- endmacro %}
+
+{%- macro final_submit(value, name="", class="") -%}
+    <div class="flex-container flex-dir-row-reverse">
+        <div class="flex-child-shrink">
+            {{ submit(value, name, class) }}
+        </div>
+    </div>
 {%- endmacro %}
 
 {%- macro checkbox(name, is_checked=False, group="") -%}
@@ -39,26 +47,33 @@
     {% endif %}
 {% endmacro %}
 
+{% macro render_required_label(field) %}
+    {% if "required" in field.flags %}
+    <span class="required">*</span>
+    {% endif %}
+{% endmacro %}
+
 {% macro render_field(field) %}
     <div class="form-field">
+    {{ field.label | debug }}
     {% if "BooleanField" in field.type %}
         <dt>
         {% if field.heading %}
             <div class="heading">{{ field.heading }}</div>
         {% endif %}
         {% if field.description %}
-            <div class="description">{{ field.description }}</div>
+            <p class="help-text">{{ field.description }}</p>
         {% endif %}
         </dt>
         <dd>
-            {{ field(**kwargs)|safe }} {{ field.label }}
+            {{ field(**kwargs)|safe }} {{ field.label }}{{ render_required_label(field) }}
             {{ render_field_errors(field.errors) }}
         </dt>
     {% else %}
         <dt>
-            <div class="heading">{{ field.label }}</div>
+            <div class="heading">{{ field.label }}{{ render_required_label(field) }}</div>
         {% if field.description %}
-            <div class="description">{{ field.description }}</div>
+            <p class="help-text">{{ field.description }}</p>
         {% endif %}
         </dt>
         <dd>
