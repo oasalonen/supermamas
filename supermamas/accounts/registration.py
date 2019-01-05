@@ -5,7 +5,7 @@ from email.mime.multipart import MIMEMultipart
 
 from supermamas.common.template_renderer import TemplateRenderer
 from supermamas.common.emailer import Emailer
-from supermamas.accounts import User, Admin, Address, BubbleMamaProfile
+from supermamas.accounts import User, Admin, Address, BubbleMamaProfile, HelpingMamaProfile
 from supermamas.areas import AreaService
 
 class RegistrationService:
@@ -29,31 +29,9 @@ class RegistrationService:
         return self.__instance.app
 
     def register_bubble_mama(self, form):
-        # Disallow multiple accounts with the same email
-        if self._repository().get_by_email(form.email.data):
-            return None # Don't raise an exception to leak who is registered
-
-        city = AreaService().get_city(form.city.data)
-        if not city:
-            raise Exception("City {} not found", form.city.data)
-
-        district = AreaService().get_district(form.district.data)
-        if not district:
-            raise Exception("District {} not found", form.district.data)
-
-        user = User()
-        user.email = form.email.data
-        user.password = self._bcrypt().generate_password_hash(form.password.data)
-        user.first_name = form.first_name.data
-        user.last_name = form.last_name.data
-
-        address = Address()
-        address.address_line1 = form.address_line1.data
-        address.address_line2 = form.address_line2.data
-        address.postal_code = form.postal_code.data
-        address.city = city
-        address.district = district
-        user.address = address
+        user = self._create_user_from_registration(form)
+        if not user:
+            return None
 
         profile = BubbleMamaProfile()
         profile.pampering_type = form.pampering_type.data
@@ -65,7 +43,6 @@ class RegistrationService:
         profile.diet_restrictions = form.diet_restrictions.data
         profile.languages = form.get_languages()
         profile.personal_message = form.personal_message.data
-        profile.referrer = form.referrer.data
         profile.accept_contact_detail_sharing = form.accept_contact_detail_sharing.data
         profile.accept_welcome_helping_mamas = form.accept_welcome_helping_mamas.data
         profile.accept_notify_helping_mamas = form.accept_notify_helping_mamas.data
@@ -84,15 +61,66 @@ class RegistrationService:
 
         user.add_role(user.ROLE_BUBBLE_MAMA)
 
-        user.require_activation()
-
-        user = self._repository().insert(user)
-        self.send_activation_email(user)
+        self._register_user(user)
 
         return user
 
     def register_helping_mama(self, form):
-        return None
+        user = self._create_user_from_registration(form)
+        if not user:
+            return None
+
+        profile = HelpingMamaProfile()
+        profile.good_to_know = form.good_to_know.data
+        profile.speciality = form.speciality.data
+        profile.personal_experience = form.get_personal_experience()
+        profile.personal_message =  form.personal_message.data
+        profile.accept_contact_detail_sharing = form.accept_contact_detail_sharing.data
+        profile.accept_diversity = form.accept_diversity.data
+
+        user.helping_mama_profile = profile
+
+        user.add_role(user.ROLE_HELPING_MAMA)
+
+        self._register_user(user)
+
+        return user
+
+    def _create_user_from_registration(self, form):
+        # Disallow multiple accounts with the same email
+        if self._repository().get_by_email(form.email.data):
+            return None # Don't raise an exception to leak who is registered
+
+        city = AreaService().get_city(form.city.data)
+        if not city:
+            raise Exception("City {} not found", form.city.data)
+
+        district = AreaService().get_district(form.district.data)
+        if not district:
+            raise Exception("District {} not found", form.district.data)
+
+        user = User()
+        user.email = form.email.data
+        user.password = self._bcrypt().generate_password_hash(form.password.data)
+        user.first_name = form.first_name.data
+        user.last_name = form.last_name.data
+        user.phone_number = form.phone_number.data
+        user.referrer = form.referrer.data
+
+        address = Address()
+        address.address_line1 = form.address_line1.data
+        address.address_line2 = form.address_line2.data
+        address.postal_code = form.postal_code.data
+        address.city = city
+        address.district = district
+        user.address = address
+
+        return user
+
+    def _register_user(self, user):
+        user.require_activation()
+        user = self._repository().insert(user)
+        self.send_activation_email(user)
 
     def register_admin(self, email, password, first_name, last_name, district_id, responsible_districts):
         # Disallow multiple accounts with the same email

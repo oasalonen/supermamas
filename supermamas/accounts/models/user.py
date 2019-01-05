@@ -3,6 +3,8 @@ from flask_login import UserMixin
 from secrets import token_urlsafe
 from datetime import datetime, timedelta
 from supermamas.accounts.models.address import Address
+from supermamas.accounts.models.helping_mama_profile import HelpingMamaProfile
+from supermamas.accounts.models.bubble_mama_profile import BubbleMamaProfile
 
 class User(dict, UserMixin):
     def __init__(self, init_dict = None):
@@ -12,11 +14,15 @@ class User(dict, UserMixin):
 
             address = init_dict.get("address")
             if address:
-                self.address = address
+                self.address = Address(address)
 
             bubble_mama_profile = init_dict.get("bubble_mama_profile")
             if bubble_mama_profile:
-                self.bubble_mama_profile = bubble_mama_profile
+                self.bubble_mama_profile = BubbleMamaProfile(bubble_mama_profile)
+
+            helping_mama_profile = init_dict.get("helping_mama_profile")
+            if helping_mama_profile:
+                self.helping_mama_profile = HelpingMamaProfile(helping_mama_profile)
         return
 
     @property
@@ -26,6 +32,10 @@ class User(dict, UserMixin):
     @property
     def ROLE_BUBBLE_MAMA(self):
         return "BUBBLE_MAMA"
+
+    @property
+    def ROLE_HELPING_MAMA(self):
+        return "HELPING_MAMA"
 
     @property
     def id(self):
@@ -116,6 +126,14 @@ class User(dict, UserMixin):
         self["address"] = value
 
     @property
+    def referrer(self):
+        return self.get("referrer")
+
+    @referrer.setter
+    def referrer(self, value):
+        self["referrer"] = value
+
+    @property
     def bubble_mama_profile(self):
         return self.get("bubble_mama_profile")
 
@@ -124,12 +142,24 @@ class User(dict, UserMixin):
         self["bubble_mama_profile"] = value
 
     @property
+    def helping_mama_profile(self):
+        return self.get("helping_mama_profile")
+
+    @helping_mama_profile.setter
+    def helping_mama_profile(self, value):
+        self["helping_mama_profile"] = value
+
+    @property
     def is_admin(self):
         return self.has_role(self.ROLE_ADMIN)
 
     @property
     def is_bubble_mama(self):
         return self.has_role(self.ROLE_BUBBLE_MAMA)
+
+    @property
+    def is_helping_mama(self):
+        return self.has_role(self.ROLE_HELPING_MAMA)
 
     @property
     def roles(self):

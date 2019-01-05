@@ -3,6 +3,7 @@ from wtforms import (Form,
     StringField,
     TextAreaField)
 from flask_babel import gettext
+from re import split
 
 from supermamas.accounts.forms.registration import UserRegistrationForm, AcceptanceBooleanField
 from supermamas.common.forms.selectwithother import ListFormField, SelectWithOtherForm
@@ -40,3 +41,7 @@ class HelpingMamaRegistrationForm(UserRegistrationForm):
             ("Traumatic birth", gettext(u"Traumatic birth")), 
             ("Premature birth", gettext(u"Premature birth"))
         ]
+
+    def get_personal_experience(self):
+        other_experience = [x for x in split(",", self.personal_experience.other.data) if len(x) > 0]
+        return self.personal_experience.options.data + other_experience

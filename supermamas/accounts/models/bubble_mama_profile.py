@@ -101,14 +101,6 @@ class BubbleMamaProfile(dict):
         self["personal_message"] = value
 
     @property
-    def referrer(self):
-        return self.get("referrer")
-
-    @referrer.setter
-    def referrer(self, value):
-        self["referrer"] = value
-
-    @property
     def accept_contact_detail_sharing(self):
         return self.get("accept_contact_detail_sharing", False)
 
