@@ -10,11 +10,12 @@ from supermamas.accounts.forms.bubble_mama_registration import (
     PamperingTypeForm,
     get_form_for_pampering_type
     )
+from supermamas.accounts.forms.helping_mama_registration import HelpingMamaRegistrationForm
 from supermamas.accounts.forms.registration import (
     AdminRegistrationForm, 
     CityForm
     )
-from supermamas.accounts.viewmodels import BubbleMamaRegistrationBreadcrumbs
+from supermamas.accounts.viewmodels import BubbleMamaRegistrationBreadcrumbs, HelpingMamaRegistrationBreadcrumbs
 
 bp = Blueprint("accounts", __name__)
 
@@ -89,6 +90,37 @@ def register_bubble_mama_profile():
         form.city.data, 
         form.pampering_type.data)
     return render_template("accounts/registration/bubble_mama_profile.html.j2", form=form, breadcrumbs=breadcrumbs)
+
+@bp.route("/accounts/registration/helping_mama/intro")
+def register_helping_mama_intro():
+    breadcrumbs = HelpingMamaRegistrationBreadcrumbs(HelpingMamaRegistrationBreadcrumbs.Step.INTRODUCTION, None)
+    return render_template("accounts/registration/helping_mama_intro.html.j2", breadcrumbs=breadcrumbs)
+
+@bp.route("/accounts/registration/helping_mama/city", methods=["GET", "POST"])
+def register_helping_mama_city():
+    form = CityForm(request.form)
+
+    if request.method == "POST" and form.validate():
+        return redirect(url_for("accounts.register_helping_mama_profile", city=form.city.data))
+
+    breadcrumbs = HelpingMamaRegistrationBreadcrumbs(HelpingMamaRegistrationBreadcrumbs.Step.CITY, None)
+    return render_template("accounts/registration/helping_mama_city.html.j2", form=form, breadcrumbs=breadcrumbs)
+
+@bp.route("/accounts/registration/helping_mama/profile", methods=("GET", "POST"))
+def register_helping_mama_profile():
+    form = HelpingMamaRegistrationForm(request.args.get("city"), request.form)
+
+    if request.method == "POST" and form.validate():
+        user = accounts.RegistrationService().register_helping_mama(form)
+        if user:
+            return redirect("/")
+        else:
+            flash(gettext(u"We could not register your account. Have you already signed up with this email?"))
+
+    breadcrumbs = HelpingMamaRegistrationBreadcrumbs(
+        HelpingMamaRegistrationBreadcrumbs.Step.PROFILE, 
+        form.city.data)
+    return render_template("accounts/registration/helping_mama_profile.html.j2", form=form, breadcrumbs=breadcrumbs)
 
 @bp.route("/accounts/registration/admin", methods=["GET", "POST"])
 @login_required

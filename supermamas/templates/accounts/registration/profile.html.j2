@@ -1,0 +1,20 @@
+{% extends "base.html.j2" %}
+
+{% import "forms.html.j2" as forms %}
+{% import "accounts/registration/navigation.html.j2" as navigation %}
+
+{% block header %}
+{{ navigation.breadcrumbs(breadcrumbs.steps) }}
+    {% block profile_header %}
+    {% endblock %}
+{% endblock %}
+
+{% block content %}
+<form method="post" class="registration">
+    {% block profile_fields %}
+    {% endblock %}
+
+    {{ forms.recaptcha() }}
+    {{ forms.submit(_("Register")) }}
+</form>
+{% endblock %}

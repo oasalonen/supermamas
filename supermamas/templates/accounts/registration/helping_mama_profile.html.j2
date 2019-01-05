@@ -1,0 +1,41 @@
+{% extends "accounts/registration/profile.html.j2" %}
+
+{% import "forms.html.j2" as forms %}
+{% import "accounts/registration/fields.html.j2" as fields %}
+
+{% block profile_header %}
+<h1>{% trans %}Create a HelpingMama profile{% endtrans %}</h1>
+{% endblock %}
+
+{% block profile_fields %}
+{{ fields.render_section(_("Account"), [
+    form.email, 
+    form.password, 
+    form.verify_password]) }}
+
+{{ fields.render_section(_("Contact details"), [
+    form.first_name, 
+    form.last_name, 
+    form.phone_number]) }}
+
+{{ fields.render_section(_("Address"), [
+    form.address_line1, 
+    form.address_line2, 
+    form.postal_code,
+    form.district]) }}
+
+{{ fields.render_section(_("Additional information for pamperings"), [
+    form.good_to_know, 
+    form.speciality, 
+    form.personal_experience,
+    form.personal_message]) }}
+
+{{ fields.render_section(_("Other"), [
+    form.referrer]) }}
+
+{{ fields.render_section(_("Terms acceptance"), [
+    form.accept_contact_detail_sharing,
+    form.accept_diversity],
+    description="<p>" ~ _("In order for pamperings to be successful, \
+    we need to ask you to agree to the following conditions:") ~ "</p>") }}
+{% endblock %}

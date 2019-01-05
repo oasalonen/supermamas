@@ -1,44 +1,37 @@
-{% extends "base.html.j2" %}
+{% extends "accounts/registration/intro.html.j2" %}
 
-{% import "forms.html.j2" as forms %}
-{% import "accounts/registration/navigation.html.j2" as navigation %}
-
-{% block header %}
-{{ navigation.breadcrumbs(breadcrumbs.steps) }}
+{% block intro_header %}
 <h1>{% trans %}I want to become a BubbleMama{% endtrans %}</h1>
 {% endblock %}
 
-{% block content %}
-<section>
+{% block intro_text %}
+<p>
+    {% trans %}Your personal data will stay confidential at all time. They 
+    will be strictly used by the admin of SuperMamas for internal purposes 
+    only in order to organize the pampering. Don't forget to also read our 
+    <a href="https://supermamasberlin.wordpress.com/questions/">FAQs.</a>
+    {% endtrans %}
+</p>
+<p>
+    {% trans %}If you are pregnant and would like to get to know the new mums 
+    in your area, and if you have the time and energy to prepare a meal for a 
+    new mum, we invite you to also
+    <a href="https://supermamasberlin.wordpress.com/become-a-helpingmama/">
+    register as HelpingMama</a>. Only when registered as HelpingMama will you 
+    receive notifications about other mums who just gave birth in your district.
+    {% endtrans %}
+</p>
+<div class="callout warning">
     <p>
-        {% trans %}Your personal data will stay confidential at all time. They 
-        will be strictly used by the admin of SuperMamas for internal purposes 
-        only in order to organize the pampering. Don't forget to also read our 
-        <a href="https://supermamasberlin.wordpress.com/questions/">FAQs.</a>
-        {% endtrans %}
+        {% trans %}SuperMamas cannot and does not want to replace the work of a 
+        professional midwife. Due to a lack of midwivery care all over Germany, 
+        please contact midwives in your area as early in your pregnancy as possible. 
+        Doulas and Mütterpflegerinnen are also good and professional options if you 
+        want extra help or have trouble finding a midwife at all.{% endtrans %}
     </p>
-    <p>
-        {% trans %}If you are pregnant and would like to get to know the new mums 
-        in your area, and if you have the time and energy to prepare a meal for a 
-        new mum, we invite you to also
-        <a href="https://supermamasberlin.wordpress.com/become-a-helpingmama/">
-        register as HelpingMama</a>. Only when registered as HelpingMama will you 
-        receive notifications about other mums who just gave birth in your district.
-        {% endtrans %}
-    </p>
-    <div class="callout warning">
-        <p>
-            {% trans %}SuperMamas cannot and does not want to replace the work of a 
-            professional midwife. Due to a lack of midwivery care all over Germany, 
-            please contact midwives in your area as early in your pregnancy as possible. 
-            Doulas and Mütterpflegerinnen are also good and professional options if you 
-            want extra help or have trouble finding a midwife at all.{% endtrans %}
-        </p>
-    </div>
-
-    <form class="registration" action="{{ url_for('accounts.register_bubble_mama_city') }}">
-        {{ forms.submit(_("Next")) }}
-    </form>
-</section>
-
+</div>
 {% endblock %}
+
+{%- block intro_form_action -%}
+{{ url_for('accounts.register_bubble_mama_city') }}
+{%- endblock -%}

@@ -91,6 +91,9 @@ class RegistrationService:
 
         return user
 
+    def register_helping_mama(self, form):
+        return None
+
     def register_admin(self, email, password, first_name, last_name, district_id, responsible_districts):
         # Disallow multiple accounts with the same email
         if self._repository().get_by_email(email):

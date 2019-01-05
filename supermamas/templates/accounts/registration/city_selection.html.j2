@@ -1,0 +1,23 @@
+{% extends "base.html.j2" %}
+
+{% import "forms.html.j2" as forms %}
+{% import "accounts/registration/navigation.html.j2" as navigation %}
+
+{% block header %}
+{{ navigation.breadcrumbs(breadcrumbs.steps) }}
+<h1>{% trans %}City{% endtrans %}</h1>
+{% endblock %}
+
+{% block content %}
+<form method="post" class="registration">
+    <section>
+        <h2>{% trans %}Which city do you live in?{% endtrans %}</h2>
+        <div class="field-collection">
+            {% block city_selection_description %}
+            {% endblock %}
+            {{ forms.render_field(form.city) }}
+        </div>
+    </section>
+    {{ forms.submit(_("Next")) }}
+</form>
+{% endblock %}

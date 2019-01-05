@@ -1,0 +1,20 @@
+{% extends "accounts/registration/intro.html.j2" %}
+
+{% block intro_header %}
+<h1>{% trans %}I want to become a HelpingMama{% endtrans %}</h1>
+{% endblock %}
+
+{% block intro_text %}
+<p>
+    {% trans %}
+    Your personal data will stay confidential at all time. They will be strictly 
+    used by the admin of SuperMamas for internal purposes only in order to organize 
+    the pampering. We invite you to take the time to read our
+    <a href="https://supermamasberlin.wordpress.com/questions/">FAQs.</a>
+    {% endtrans %}
+</p>
+{% endblock %}
+
+{%- block intro_form_action -%}
+{{ url_for('accounts.register_helping_mama_city') }}
+{%- endblock -%}

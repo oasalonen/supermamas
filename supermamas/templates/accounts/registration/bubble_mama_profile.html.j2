@@ -1,84 +1,53 @@
-{% extends "base.html.j2" %}
+{% extends "accounts/registration/profile.html.j2" %}
 
 {% import "forms.html.j2" as forms %}
-{% import "accounts/registration/navigation.html.j2" as navigation %}
+{% import "accounts/registration/fields.html.j2" as fields %}
 
-{% block header %}
-{{ navigation.breadcrumbs(breadcrumbs.steps) }}
+{% block profile_header %}
 <h1>{% trans %}Create a BubbleMama profile{% endtrans %}</h1>
 {% endblock %}
 
-{% block content %}
-<form method="post" class="registration">
-    <section>
-        <h2>{% trans %}Account{% endtrans %}</h2>
-        <div class="field-collection">
-            {{ forms.render_field(form.email) }}
-            {{ forms.render_field(form.password) }}
-            {{ forms.render_field(form.verify_password) }}
-        <div>
-    </section>
+{% block profile_fields %}
+{{ fields.render_section(_("Account"), [
+    form.email, 
+    form.password, 
+    form.verify_password]) }}
 
-    <section>
-        <h2>{% trans %}Contact details{% endtrans %}</h2>
-        <div class="field-collection">
-            {{ forms.render_field(form.first_name) }}
-            {{ forms.render_field(form.last_name) }}
-            {{ forms.render_field(form.phone_number) }}
-        </div>
-        <section>
-            <h3>{% trans %}Address{% endtrans %}</h3>
-            <div class="field-collection">
-                {{ forms.render_field(form.address_line1) }}
-                {{ forms.render_field(form.address_line2) }}
-                {{ forms.render_field(form.postal_code) }}
-                {{ forms.render_field(form.district) }}
-            </div>
-        </section>
-    </section>
+{{ fields.render_section(_("Contact details"), [
+    form.first_name, 
+    form.last_name, 
+    form.phone_number]) }}
 
-    <section>
-        <h2>{% trans %}Information for planning pamperings{% endtrans %}</h2>
-        <div class="field-collection">
-            {{ forms.render_field(form.due_date) if form.due_date }}
-            {{ forms.render_field(form.pampering_start_date) }}
-            {{ forms.render_field(form.baby_name) if form.baby_name }}
-            {{ forms.render_field(form.baby_birth_date) if form.baby_birth_date }}
-            {{ forms.render_field(form.pampering_days) }}
-            {{ forms.render_field(form.max_pamperings_per_week) }}
-            {{ forms.render_field(form.family_situation) }}
-            {{ forms.render_field(form.food_allergies) }}
-            {{ forms.render_field(form.diet_restrictions) }}
-            {{ forms.render_field(form.languages) }}
-            {{ forms.render_field(form.personal_message) }}
-        </div>
-    </section>
+{{ fields.render_section(_("Address"), [
+    form.address_line1, 
+    form.address_line2, 
+    form.postal_code,
+    form.district]) }}
 
-    <section>
-        <h2>{% trans %}Other{% endtrans %}</h2>
-        <div class="field-collection">
-            {{ forms.render_field(form.referrer) }}
-        </div>
-    </section>
+{{ fields.render_section(_("Information for planning your pampering"), [
+    form.due_date, 
+    form.pampering_start_date, 
+    form.baby_name,
+    form.baby_birth_date,
+    form.pampering_days,
+    form.max_pamperings_per_week,
+    form.family_situation,
+    form.food_allergies,
+    form.diet_restrictions,
+    form.languages,
+    form.personal_message]) }}
 
-    <section>
-        <h2>{% trans %}Terms acceptance{% endtrans %}</h2>
-        <div class="field-collection">
-            <p>
-                {% trans %}In order for your pampering to be successful, and because the 
-                SuperMamas network is solely based on the goodwill of others, we need to 
-                ask you to agree to the following conditions:{% endtrans %}
-                </p>
-            {{ forms.render_field(form.accept_contact_detail_sharing) }}
-            {{ forms.render_field(form.accept_welcome_helping_mamas) }}
-            {{ forms.render_field(form.accept_notify_helping_mamas) }}
-            {{ forms.render_field(form.accept_thank_helping_mamas) }}
-            {{ forms.render_field(form.accept_diversity) }}
-            {{ forms.render_field(form.allow_helping_dads) }}
-        </div>
-    </section>
+{{ fields.render_section(_("Other"), [
+    form.referrer]) }}
 
-    {{ forms.recaptcha() }}
-    {{ forms.submit(_("Register")) }}
-</form>
+{{ fields.render_section(_("Terms acceptance"), [
+    form.accept_contact_detail_sharing,
+    form.accept_welcome_helping_mamas,
+    form.accept_notify_helping_mamas,
+    form.accept_thank_helping_mamas,
+    form.accept_diversity,
+    forms.allow_helping_dads],
+    description="<p>" ~ _("In order for your pampering to be successful, \
+    and because the SuperMamas network is solely based on the goodwill of \
+    others, we need to ask you to agree to the following conditions:") ~ "</p>") }}
 {% endblock %}

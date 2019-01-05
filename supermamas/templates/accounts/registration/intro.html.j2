@@ -1,0 +1,20 @@
+{% extends "base.html.j2" %}
+
+{% import "forms.html.j2" as forms %}
+{% import "accounts/registration/navigation.html.j2" as navigation %}
+
+{% block header %}
+    {{ navigation.breadcrumbs(breadcrumbs.steps) }}
+    {% block intro_header %}
+    {% endblock %}
+{% endblock %}
+
+{% block content %}
+<section>
+    {% block intro_text %}
+    {% endblock %}
+    <form class="registration" action="{% block intro_form_action %}{% endblock %}">
+        {{ forms.submit(_("Next")) }}
+    </form>
+</section>
+{% endblock %}

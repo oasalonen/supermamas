@@ -73,6 +73,25 @@ class BaseRegistrationForm(Form):
 class UserRegistrationForm(BaseRegistrationForm):
     recaptcha = RecaptchaField()
 
+    address_line1 = StringField(
+        gettext(u"Street address"), 
+        [InputRequired(gettext(u"Please provide your street address"))])
+
+    address_line2 = StringField(gettext(u"Address line 2"))
+
+    postal_code = StringField(
+        gettext(u"Postal code"), 
+        [InputRequired(gettext(u"Please provide your postal code"))])
+
+    phone_number = StringField(
+        gettext(u"Phone number"), 
+        [InputRequired(gettext(u"Please provide your phone number"))])
+
+    referrer = StringField(
+        gettext(u"How did you hear about SuperMamas?"), 
+        [InputRequired(gettext(u"Please fill this in"))],
+        description=gettext(u"A friend / Facebook (which group?) / my midwife / ..."))
+
     def __init__(self, city, formdata=None, obj=None, prefix='', data=None, meta=None, **kwargs):
         super().__init__(city, formdata, obj, prefix, data, meta, **kwargs)
 

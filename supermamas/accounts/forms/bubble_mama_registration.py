@@ -52,20 +52,6 @@ class PamperingTypeForm(Form):
 class BubbleMamaRegistrationForm(UserRegistrationForm):
     pampering_type = HiddenField()
 
-    address_line1 = StringField(
-        gettext(u"Street address"), 
-        [InputRequired(gettext(u"Please provide your street address"))])
-
-    address_line2 = StringField(gettext(u"Address line 2"))
-
-    postal_code = StringField(
-        gettext(u"Postal code"), 
-        [InputRequired(gettext(u"Please provide your postal code"))])
-
-    phone_number = StringField(
-        gettext(u"Phone number"), 
-        [InputRequired(gettext(u"Please provide your phone number"))])
-
     pampering_start_date = CalendarField(
         gettext(u"Start of pampering"),
         [InputRequired(gettext(u"Please provide a date"))],
@@ -113,11 +99,6 @@ class BubbleMamaRegistrationForm(UserRegistrationForm):
         [InputRequired(gettext(u"Please provide a personalized message"))],
         description=gettext(u"Tell us more about yourself and leave a message here that we can forward to your HelpingMamas.")
         )
-
-    referrer = StringField(
-        gettext(u"How did you hear about SuperMamas?"), 
-        [InputRequired(gettext(u"Please fill this in"))],
-        description=gettext(u"A friend / Facebook (which group?) / my midwife / ..."))
 
     accept_contact_detail_sharing = AcceptanceBooleanField(description=gettext(u"Only the HelpingMamas who will be part of your pampering will get your contact details, and you will receive their contact details as well."))
     

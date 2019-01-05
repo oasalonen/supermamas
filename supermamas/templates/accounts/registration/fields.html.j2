@@ -1,0 +1,13 @@
+{% import "forms.html.j2" as forms %}
+
+{% macro render_section(title, fields, description=None) %}
+<section>
+    <h2>{{ title }}</h2>
+    <div class="field-collection">
+        {{ description if description }}
+        {% for field in fields %}
+            {{ forms.render_field(field) if field }}
+        {% endfor %}
+    <div>
+</section>
+{% endmacro %}
