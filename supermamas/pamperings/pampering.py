@@ -1,6 +1,9 @@
 from enum import Enum
 from flask_pymongo import ObjectId
+
 from supermamas.pamperings.signup import Signup
+from supermamas.accounts import UserReference
+from supermamas.areas import District
 
 class PamperingType(Enum):
     PRE = "PRE"
@@ -13,6 +16,15 @@ class Pampering(dict):
     def __init__(self, init_dict=None):
         if init_dict:
             self.update(init_dict)
+
+            bubble_mama = init_dict.get("bubble_mama")
+            if bubble_mama:
+                self.bubble_mama = bubble_mama
+
+            district = init_dict.get("district")
+            if district:
+                self.district = district
+
         return
 
     @property 
@@ -28,12 +40,8 @@ class Pampering(dict):
         return self.get("bubble_mama")
 
     @bubble_mama.setter
-    def bubble_mama(self, user):
-        self["bubble_mama"] = {
-            "id": user.id,
-            "first_name": user.first_name,
-            "last_name": user.last_name
-        }
+    def bubble_mama(self, value):
+        self["bubble_mama"] = UserReference(value)
 
     @property
     def district(self):
@@ -41,10 +49,7 @@ class Pampering(dict):
 
     @district.setter
     def district(self, value):
-        self["district"] = {
-            "id": value.id,
-            "name": value.name
-        }
+        self["district"] = District(value)
 
     @property
     def available_dates(self):

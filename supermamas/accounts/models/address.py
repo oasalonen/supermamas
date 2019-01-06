@@ -1,3 +1,5 @@
+from supermamas.areas import District, City
+
 class Address(dict):
     def __init__(self, init_dict = None):
         if init_dict:
@@ -5,11 +7,11 @@ class Address(dict):
             
             district = init_dict.get("district")
             if district:
-                self.district = district
+                self.district = District(district)
             
             city = init_dict.get("city")
             if city:
-                self.city = city
+                self.city = City(city)
         return
 
     @property

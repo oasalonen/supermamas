@@ -31,3 +31,7 @@ class Repository:
     def get_by_email(self, email):
         user = self.collection.find_one({ "email": email })
         return User(user) if user else None
+
+    def get_by_role(self, role):
+        results = self.collection.find({ "roles": role })
+        return [User(result) for result in results]

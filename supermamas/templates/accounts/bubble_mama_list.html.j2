@@ -1,0 +1,31 @@
+{% extends "base.html.j2" %}
+
+{% import "forms.html.j2" as forms %}
+
+{% block header %}
+<h1>{% trans %}Bubble Mamas{% endtrans %}</h1>
+{% endblock %}
+
+{% block content %}
+<section>
+    <table class="hover">
+        <thead>
+            <tr>
+                <th>{% trans %}Name{% endtrans %}</th>
+                <th>{% trans %}District{% endtrans %}</th>
+                <th>{% trans %}Pampering{% endtrans %}</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+        {% for bubble_mama in viewmodel.bubble_mamas %}
+            <tr id="{{ bubble_mama.id }}">
+                <td>{{ bubble_mama.name }}</td>
+                <td>{{ bubble_mama.district }}</td>
+                <td><a href="{{ bubble_mama.pampering.link }}">{{ bubble_mama.pampering.label }}</a></td>
+            </tr>
+        {% endfor %}
+        <tbody>
+    </table>
+</section>
+{% endblock %}

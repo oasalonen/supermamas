@@ -6,8 +6,45 @@ from supermamas.accounts.models.address import Address
 from supermamas.accounts.models.helping_mama_profile import HelpingMamaProfile
 from supermamas.accounts.models.bubble_mama_profile import BubbleMamaProfile
 
-class User(dict, UserMixin):
+class UserReference(dict):
+    def __init__(self, init_dict=None):
+        if init_dict:
+            self.update(init_dict)
+        return
+
+    @property 
+    def id(self):
+        return str(self.get("_id"))
+
+    @id.setter
+    def id(self, value):
+        self["_id"] = ObjectId(value)
+
+    @property
+    def first_name(self):
+        return self.get("first_name")
+    
+    @first_name.setter
+    def first_name(self, value):
+        self["first_name"] = value
+
+    @property
+    def last_name(self):
+        return self.get("last_name")
+
+    @last_name.setter
+    def last_name(self, value):
+        self["last_name"] = value
+
+
+class User(UserReference, UserMixin):
+    
+    ROLE_ADMIN="ADMIN"
+    ROLE_BUBBLE_MAMA="BUBBLE_MAMA"
+    ROLE_HELPING_MAMA="HELPING_MAMA"
+
     def __init__(self, init_dict = None):
+        super().__init__(init_dict)
         self.address = Address()
         if init_dict:
             self.update(init_dict)
@@ -24,26 +61,6 @@ class User(dict, UserMixin):
             if helping_mama_profile:
                 self.helping_mama_profile = HelpingMamaProfile(helping_mama_profile)
         return
-
-    @property
-    def ROLE_ADMIN(self):
-        return "ADMIN"
-
-    @property
-    def ROLE_BUBBLE_MAMA(self):
-        return "BUBBLE_MAMA"
-
-    @property
-    def ROLE_HELPING_MAMA(self):
-        return "HELPING_MAMA"
-
-    @property
-    def id(self):
-        return str(self.get("_id"))
-
-    @id.setter
-    def id(self, value):
-        self["_id"] = ObjectId(value)
 
     @property
     def is_active(self):
@@ -92,22 +109,6 @@ class User(dict, UserMixin):
     @password.setter
     def password(self, value):
         self["password"] = value
-
-    @property
-    def first_name(self):
-        return self.get("first_name")
-    
-    @first_name.setter
-    def first_name(self, value):
-        self["first_name"] = value
-
-    @property
-    def last_name(self):
-        return self.get("last_name")
-
-    @last_name.setter
-    def last_name(self, value):
-        self["last_name"] = value
 
     @property
     def phone_number(self):

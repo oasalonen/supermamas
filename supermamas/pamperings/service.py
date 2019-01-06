@@ -26,6 +26,10 @@ class Service:
     def get_all_pamperings(self):
         return self._repository().get_all()
 
+    def get_by_bubble_mamas(self, bubble_mama_ids):
+        pamperings = self._repository().get_by_bubble_mamas(bubble_mama_ids)
+        return dict([(pampering.bubble_mama.id, pampering) for pampering in pamperings])
+
     def prepare_pampering(self, bubble_mama_id, start_date=None, end_date=None):
         start_date = start_date if start_date else date.today()
         end_date = end_date if end_date else start_date + timedelta(days=20)

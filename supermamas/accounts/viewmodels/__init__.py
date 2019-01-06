@@ -1,1 +1,2 @@
 from supermamas.accounts.viewmodels.breadcrumbs import BubbleMamaRegistrationBreadcrumbs, HelpingMamaRegistrationBreadcrumbs
+from supermamas.accounts.viewmodels.bubble_mama_list import BubbleMamaListViewModel

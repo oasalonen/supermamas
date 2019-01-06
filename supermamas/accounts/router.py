@@ -8,14 +8,15 @@ from supermamas.accounts.forms.login import LoginForm
 from supermamas.accounts.forms.bubble_mama_registration import (
     BubbleMamaRegistrationForm,
     PamperingTypeForm,
-    get_form_for_pampering_type
-    )
+    get_form_for_pampering_type)
 from supermamas.accounts.forms.helping_mama_registration import HelpingMamaRegistrationForm
 from supermamas.accounts.forms.registration import (
     AdminRegistrationForm, 
-    CityForm
-    )
-from supermamas.accounts.viewmodels import BubbleMamaRegistrationBreadcrumbs, HelpingMamaRegistrationBreadcrumbs
+    CityForm)
+from supermamas.accounts.viewmodels import (
+    BubbleMamaRegistrationBreadcrumbs, 
+    HelpingMamaRegistrationBreadcrumbs,
+    BubbleMamaListViewModel)
 
 bp = Blueprint("accounts", __name__)
 
@@ -151,3 +152,9 @@ def activate_user(user_id):
     accounts.RegistrationService().activate_user(user_id, code)
     flash(gettext(u"Your account has been successfully activated. You may now log in to your account."))
     return redirect(url_for("accounts.login"))
+
+@bp.route("/accounts/bubble_mamas", methods=["GET"])
+@login_required
+@admin_only
+def bubble_mama_list():
+    return render_template("accounts/bubble_mama_list.html.j2", viewmodel=BubbleMamaListViewModel())

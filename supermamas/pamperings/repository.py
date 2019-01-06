@@ -26,5 +26,10 @@ class Repository:
     def get_all(self):
         return [Pampering(pampering) for pampering in self.collection.find()]
 
+    def get_by_bubble_mamas(self, bubble_mama_ids):
+        ids = [ObjectId(id) for id in bubble_mama_ids]
+        results = self.collection.find({"bubble_mama._id": {"$in": ids}})
+        return [Pampering(result) for result in results]
+
     def update_field(self, pampering_id, field, value):
         return self.collection.update_one({"_id": ObjectId(pampering_id)}, {"$set": {field: value}})
