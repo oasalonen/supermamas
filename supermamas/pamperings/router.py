@@ -7,7 +7,8 @@ from datetime import datetime, date
 from supermamas.pamperings import PamperingService
 from supermamas.pamperings.forms import PamperingFilterForm, CreatePamperingForm
 from supermamas.common.router_utils import admin_only
-from supermamas.pamperings.viewmodels import PamperingListViewModel, CreatePamperingViewModel
+from supermamas.pamperings.viewmodels import PamperingListViewModel
+from supermamas.accounts import AccountsService
 
 bp = Blueprint("pamperings", __name__)
 
@@ -42,11 +43,12 @@ def create():
                 return redirect("/")
             else:
                 flash(gettext(u"Something went wrong during pampering creation"))
+    elif request.method == "GET":
+        form.set_bubble_mama(AccountsService().get_bubble_mama(bubble_mama_id))
 
     return render_template(
         "pamperings/create.html.j2",
-        form=form,
-        viewmodel=CreatePamperingViewModel(bubble_mama_id))
+        form=form)
 
 @bp.route("/pamperings/signup", methods=("GET", "POST"))
 @login_required

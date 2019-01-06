@@ -1,2 +1,1 @@
 from supermamas.pamperings.viewmodels.pampering_list import PamperingListViewModel
-from supermamas.pamperings.viewmodels.create_pampering import CreatePamperingViewModel

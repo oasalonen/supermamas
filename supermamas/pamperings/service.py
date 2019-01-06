@@ -44,7 +44,17 @@ class Service:
         pampering.bubble_mama = bubble_mama
         pampering.district = AreaService().get_district(bubble_mama.address.district.id)
         pampering.available_dates = available_dates
-        pampering.nearby_poi = form.nearby_poi.data
+
+        bubble_mama_info = Pampering.BubbleMamaInfo()
+        bubble_mama_info.name = form.bubble_mama_name.data
+        bubble_mama_info.family_situation = form.family_situation.data
+        bubble_mama_info.food_allergies = form.food_allergies.data
+        bubble_mama_info.diet_restrictions = form.diet_restrictions.data
+        bubble_mama_info.languages = form.languages.data
+        bubble_mama_info.personal_message = form.personal_message.data
+        bubble_mama_info.nearby_poi = form.nearby_poi.data
+
+        pampering.bubble_mama_info = bubble_mama_info
         pampering = self._repository().insert(pampering)
 
         return pampering

@@ -18,6 +18,7 @@ class Pampering(dict):
             self.update(init_dict)
             self.bubble_mama = init_dict.get("bubble_mama")
             self.district = init_dict.get("district")
+            self.bubble_mama_info = init_dict.get("bubble_mama_info")
 
     @property 
     def id(self):
@@ -74,9 +75,72 @@ class Pampering(dict):
         return self.get("assignments")
 
     @property
-    def nearby_poi(self):
-        return self.get("nearby_poi")
+    def bubble_mama_info(self):
+        return self.get("bubble_mama_info")
 
-    @nearby_poi.setter
-    def nearby_poi(self, value):
-        self["nearby_poi"] = value
+    @bubble_mama_info.setter
+    def bubble_mama_info(self, value):
+        self["bubble_mama_info"] = self.BubbleMamaInfo(value)
+
+    class BubbleMamaInfo(dict):
+        def __init__(self, init_dict=None):
+            if init_dict:
+                self.update(init_dict)
+
+        @property
+        def name(self):
+            return self.get("name")
+
+        @name.setter
+        def name(self, value):
+            self["name"] = value
+
+        @property
+        def family_situation(self):
+            return self.get("family_situation")
+
+        @family_situation.setter
+        def family_situation(self, value):
+            self["family_situation"] = value
+
+        @property
+        def food_allergies(self):
+            return self.get("food_allergies")
+
+        @food_allergies.setter
+        def food_allergies(self, value):
+            self["food_allergies"] = value
+
+        @property
+        def diet_restrictions(self):
+            return self.get("diet_restrictions")
+
+        @diet_restrictions.setter
+        def diet_restrictions(self, value):
+            self["diet_restrictions"] = value
+
+        @property
+        def languages(self):
+            return self.get("languages")
+
+        @languages.setter
+        def languages(self, value):
+            self["languages"] = value
+
+        @property
+        def personal_message(self):
+            return self.get("personal_message")
+
+        @personal_message.setter
+        def personal_message(self, value):
+            self["personal_message"] = value
+
+        @property
+        def nearby_poi(self):
+            return self.get("nearby_poi")
+
+        @nearby_poi.setter
+        def nearby_poi(self, value):
+            self["nearby_poi"] = value
+    
+

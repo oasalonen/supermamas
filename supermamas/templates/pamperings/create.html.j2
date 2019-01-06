@@ -11,12 +11,20 @@
 <form class="create-pampering" method="post">
 
     <section>
-        <h2>{% trans %}Bubble mama details{% endtrans %}</h2>
+        <h2>{% trans %}BubbleMama information for HelpingMamas{% endtrans %}</h2>
         <div class="field-collection">
-            <div class="grid-x grid-margin-x">
-                <div class="cell small-4">{% trans %}Name{% endtrans %}</div>
-                <div class="cell small-8">{{ viewmodel.bubble_mama.name }}</div>
-            </div>
+            <p>
+                {% trans %}These details will be shared with every HelpingMama who considers
+                signing up for a pampering. If there is something that should obviously not
+                be shared, please edit it before creating the pampering.{% endtrans %}
+            </p>
+            {{ forms.render_field(form.bubble_mama_name) }}
+            {{ forms.render_field(form.family_situation) }}
+            {{ forms.render_field(form.food_allergies) }}
+            {{ forms.render_field(form.diet_restrictions) }}
+            {{ forms.render_field(form.languages) }}
+            {{ forms.render_field(form.personal_message) }}
+            {{ forms.render_field(form.nearby_poi) }}
         </div>
     </section>
 
@@ -37,13 +45,6 @@
 
             {{ forms.render_field(form.available_dates, class="date-selector small-up-7") }}
         </div>
-    </section>
-        
-    <section>
-        <h2>{% trans %}Additional information{% endtrans %}</h2>
-        <div class="field-collection">
-            {{ forms.render_field(form.nearby_poi) }}
-        </div>    
     </section>
     
     {{ forms.final_submit(_("Create"))}}

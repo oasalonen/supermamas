@@ -32,6 +32,22 @@ class CreatePamperingForm(Form):
         description=gettext(u"e.g. a nearby station that helps HelpingMamas understand approximately where the pampering will happen")
         )
 
+    bubble_mama_name = StringField(
+        gettext(u"BubbleMama's name"),
+        [InputRequired(gettext(u"Please fill this field"))],
+        description=gettext(u"Only share BubbleMama's first name")
+        )
+
+    family_situation = StringField(gettext(u"Family situation"))
+
+    food_allergies = StringField(gettext(u"Food allergies"))
+
+    diet_restrictions = StringField(gettext(u"Diet restrictions"))
+
+    languages = StringField(gettext(u"Languages understood"))
+
+    personal_message = StringField(gettext(u"Personal message"))
+
     def __init__(self, formdata=None, **kwargs):
         super().__init__(formdata, **kwargs)
 
@@ -41,5 +57,13 @@ class CreatePamperingForm(Form):
             date_range.append((d.isoformat(), "{} {}/{}".format(weekdays()[d.weekday()], d.day, d.month)))
         self.available_dates.choices = date_range
 
+    def set_bubble_mama(self, bubble_mama):
+        profile = bubble_mama.bubble_mama_profile
+        self.bubble_mama_name.data = bubble_mama.first_name
+        self.family_situation.data = profile.family_situation
+        self.food_allergies.data = profile.food_allergies
+        self.diet_restrictions.data = profile.diet_restrictions
+        self.languages.data = ", ".join(profile.languages)
+        self.personal_message.data = profile.personal_message
 
         
