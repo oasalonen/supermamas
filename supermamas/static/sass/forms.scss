@@ -1,4 +1,4 @@
-form.registration, form.create-pampering {
+form.registration, form.create-pampering, form.invite-pampering {
     section {
         @include card-container($border:0);
 
@@ -52,5 +52,10 @@ form.registration, form.create-pampering {
     .help-text {
         margin-top: 0.0rem;
         margin-bottom: 0.2rem;
+    }
+    textarea.large {
+        overflow: auto;
+        resize: vertical;
+        height: 20em;
     }
 }

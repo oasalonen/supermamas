@@ -35,3 +35,7 @@ class Repository:
     def get_by_role(self, role):
         results = self.collection.find({ "roles": role })
         return [User(result) for result in results]
+
+    def get_by_role_and_district(self, role, district_id):
+        results = self.collection.find({ "$and": [{ "roles": role }, { "address.district._id": ObjectId(district_id) }] })
+        return [User(result) for result in results]

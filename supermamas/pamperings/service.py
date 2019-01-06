@@ -1,11 +1,14 @@
 from flask_babel import gettext
 from dateutil import rrule, parser
 from datetime import datetime, date, timedelta
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 from supermamas.pamperings import Signup
 from supermamas.pamperings import Pampering
 from supermamas.accounts import Repository as AccountsRepository
 from supermamas.areas import AreaService
+from supermamas.common import Emailer
 
 class Service:
     __instance = None
@@ -22,6 +25,9 @@ class Service:
 
     def _accounts_repository(self):
         return Service.__instance.accounts_repository
+
+    def get_pampering(self, pampering_id):
+        return self._repository().get(pampering_id)
 
     def get_all_pamperings(self):
         return self._repository().get_all()
@@ -58,6 +64,17 @@ class Service:
         pampering = self._repository().insert(pampering)
 
         return pampering
+
+    def send_pampering_invitation(self, pampering_id, form):
+        message = MIMEMultipart("alternative")
+        message["Subject"] = form.subject.data
+        message["From"] = form.sender.data
+        message["To"] = ""
+
+        # TODO: attach plaintext
+        message.attach(MIMEText(form.message.data, "html"))
+
+        Emailer().send_message(form.get_recipients(), message)
 
     def prepare_signup(self, pampering_id, helping_mama_id):
         pampering = self._repository().get(pampering_id)

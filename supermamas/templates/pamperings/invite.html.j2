@@ -1,0 +1,28 @@
+{% extends "base.html.j2" %}
+
+{% import "forms.html.j2" as forms %}
+
+{% block header %}
+<h1>{% trans %}Invite HelpingMamas to pampering{% endtrans %}</h1>
+{% endblock %}
+
+{% block content %}
+<form class="invite-pampering" method="post">
+
+    <section>
+        <h2>{% trans %}Invitation email{% endtrans %}</h2>
+        <div class="field-collection">
+            {{ forms.render_field(form.sender) }}
+            {{ forms.render_field(form.recipients) }}
+            {{ forms.render_field(form.subject) }}
+            {{ forms.render_field(form.message, class="large") }}
+
+            {# <div contenteditable="true">
+                <p>Use content editable?<p>
+            </div> #}
+        </div>
+    </section>
+    
+    {{ forms.final_submit(_("Send"))}}
+</form>
+{% endblock %}

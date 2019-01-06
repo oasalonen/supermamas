@@ -1,12 +1,16 @@
-from flask import Blueprint, render_template, redirect, request, flash
+from flask import Blueprint, render_template, redirect, request, flash, url_for
 from flask_babel import gettext
 from flask_login import login_required
 from dateutil import rrule, parser
 from datetime import datetime, date
 
 from supermamas.pamperings import PamperingService
-from supermamas.pamperings.forms import PamperingFilterForm, CreatePamperingForm
+from supermamas.pamperings.forms import (
+    PamperingFilterForm, 
+    CreatePamperingForm,
+    PamperingInvitationForm)
 from supermamas.common.router_utils import admin_only
+from supermamas.common import ConfigurationService
 from supermamas.pamperings.viewmodels import PamperingListViewModel
 from supermamas.accounts import AccountsService
 
@@ -40,7 +44,7 @@ def create():
         if not request.form.get("refresh_dates"):
             pampering = PamperingService().create_pampering(bubble_mama_id, form)
             if pampering:
-                return redirect("/")
+                return redirect(url_for("pamperings.invite", pampering_id=pampering.id))
             else:
                 flash(gettext(u"Something went wrong during pampering creation"))
     elif request.method == "GET":
@@ -48,6 +52,29 @@ def create():
 
     return render_template(
         "pamperings/create.html.j2",
+        form=form)
+
+@bp.route("/pamperings/<pampering_id>/invite", methods=("GET", "POST"))
+@login_required
+@admin_only
+def invite(pampering_id):
+    form = PamperingInvitationForm(request.form)
+
+    if request.method == "POST":
+        PamperingService().send_pampering_invitation(pampering_id, form)
+        return redirect("/")
+    elif request.method == "GET":
+        pampering = PamperingService().get_pampering(pampering_id)
+        if not pampering:
+            raise Exception(F"No such pampering {pampering_id}")
+        helping_mamas = AccountsService().get_helping_mamas_by_district(pampering.district.id)
+        recipients = [helping_mama.email for helping_mama in helping_mamas]
+        form.initialize_fields(ConfigurationService().get("MAIL_SENDER"), recipients, pampering)
+    else:
+        raise Exception(F"Unhandled method {request.method}")
+
+    return render_template(
+        "pamperings/invite.html.j2",
         form=form)
 
 @bp.route("/pamperings/signup", methods=("GET", "POST"))

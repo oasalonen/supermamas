@@ -22,3 +22,6 @@ class AccountsService:
         if not bubble_mama.is_bubble_mama:
             raise Exception("User {} is not a bubble mama", bubble_mama_id)
         return bubble_mama
+
+    def get_helping_mamas_by_district(self, district_id):
+        return self._repository().get_by_role_and_district(User.ROLE_HELPING_MAMA, district_id)
