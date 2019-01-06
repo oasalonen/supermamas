@@ -44,6 +44,7 @@ class Service:
         pampering.bubble_mama = bubble_mama
         pampering.district = AreaService().get_district(bubble_mama.address.district.id)
         pampering.available_dates = available_dates
+        pampering.nearby_poi = form.nearby_poi.data
         pampering = self._repository().insert(pampering)
 
         return pampering

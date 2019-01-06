@@ -1,4 +1,5 @@
-from wtforms import Form, SelectMultipleField
+from wtforms import Form, SelectMultipleField, StringField
+from wtforms.validators import InputRequired
 from flask_babel import gettext
 from dateutil import rrule, parser
 from datetime import datetime, date, timedelta
@@ -24,6 +25,12 @@ class CreatePamperingForm(Form):
         )
 
     available_dates = CalendarSelectField("")
+
+    nearby_poi = StringField(
+        gettext(u"Nearby place"),
+        [InputRequired(gettext(u"Please fill this field"))],
+        description=gettext(u"e.g. a nearby station that helps HelpingMamas understand approximately where the pampering will happen")
+        )
 
     def __init__(self, formdata=None, **kwargs):
         super().__init__(formdata, **kwargs)

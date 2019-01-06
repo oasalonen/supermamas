@@ -72,3 +72,11 @@ class Pampering(dict):
     @property
     def assignments(self):
         return self.get("assignments")
+
+    @property
+    def nearby_poi(self):
+        return self.get("nearby_poi")
+
+    @nearby_poi.setter
+    def nearby_poi(self, value):
+        self["nearby_poi"] = value

@@ -36,10 +36,16 @@
             </div>
 
             {{ forms.render_field(form.available_dates, class="date-selector small-up-7") }}
-
-            {{ forms.final_submit(_("Create"))}}
         </div>
     </section>
-
+        
+    <section>
+        <h2>{% trans %}Additional information{% endtrans %}</h2>
+        <div class="field-collection">
+            {{ forms.render_field(form.nearby_poi) }}
+        </div>    
+    </section>
+    
+    {{ forms.final_submit(_("Create"))}}
 </form>
 {% endblock %}
