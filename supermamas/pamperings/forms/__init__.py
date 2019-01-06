@@ -1,1 +1,2 @@
 from supermamas.pamperings.forms.pampering_filter import PamperingFilterForm
+from supermamas.pamperings.forms.create_pampering import CreatePamperingForm

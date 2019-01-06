@@ -1,0 +1,56 @@
+form.registration, form.create-pampering {
+    section {
+        @include card-container($border:0);
+
+        @for $index from 1 through 6 {
+            h#{$index} {
+                @include card-divider;
+                color: $white;
+                padding: 1rem;
+            }
+        }
+        .field-collection {
+            @include card-section;
+        }
+    }
+
+    input.submit {
+        color: $white;
+    }
+    input.submit.final {
+        @extend input.submit;
+        width: 100%;
+        padding: 1rem;
+    }
+}
+
+.form-field {
+    margin-bottom: 2rem;
+
+    ul {
+        margin: 0;
+    }
+    li {
+        list-style-type: none;
+    }
+    label {
+        display: inline;
+        margin-right: 0rem;
+    }
+    span.required {
+        color: $alert-color;
+    }
+    .heading {
+        label {
+            font-size: 100%;
+            font-weight: 600;
+        }
+    }
+    input, select {
+        margin-bottom: 0rem;
+    }
+    .help-text {
+        margin-top: 0.0rem;
+        margin-bottom: 0.2rem;
+    }
+}

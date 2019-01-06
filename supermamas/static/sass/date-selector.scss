@@ -1,0 +1,65 @@
+
+.date-selector {
+    @include xy-grid;
+
+    li {
+        list-style-type: none;
+        text-align: center;
+        
+        display: block;
+        height: 50px;
+        color: #777;
+
+        border: 2px;
+        border-color: $white;
+        border-style: solid;
+
+        .container {
+            border: 2px;
+            border-color: $black;
+            display: block;
+            position: relative;
+            height: 100%;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+        .container label {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            background-color: #eee;
+        }
+        .container:hover label {
+            background-color: #ccc;
+        }
+        .container input:checked ~ label {
+            background-color: $supermamas-color;
+        }
+    
+        .checkmark:after {
+            content: "-";
+            display: inline-block;
+            position: relative;
+            height: 0%;
+            width: 100%;
+            vertical-align: middle;
+        }
+    
+        .container input:checked ~ .checkmark:after {
+            content: "✓";
+        }
+    }
+}

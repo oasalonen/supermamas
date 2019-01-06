@@ -1,25 +1,5 @@
 {% import "forms.html.j2" as forms %}
 
-{% macro date_range_selector(start_date, end_date, date_range) -%}
-<div class="date-range-selector">
-    <div class="grid-x grid-margin-x align-middle">
-        <div class="cell small-12 medium-5">{{ forms.input("start_date", label=_("Start date"), type="date", value=start_date) }}</div>
-        <div class="cell small-12 medium-5">{{ forms.input("end_date", label=_("End date"), type="date", value=end_date) }}</div>
-        <div class="cell small-12 medium-2">{{ forms.submit("Refresh dates", name="refresh_dates") }}</div>
-    </div>
-    <ul class="calendar small-up-7">
-    {% set ordered_dates = date_range|dictsort %}
-    {% set first_weekday = date_range[ordered_dates|first|first].weekday %}
-    {%- for i in range(first_weekday - 0) %}
-        <li class="cell empty"></li>
-    {%- endfor %}
-    {%- for item in ordered_dates %}
-        <li class="cell custom-checkbox">{{ forms.date_selector(item|first, group="date_range[]", values=date_range) }}</li>
-    {%- endfor %}
-    </ul>
-</div>
-{%- endmacro %}
-
 {% macro signup(available_dates, signups, current_signup) -%}
 <div class="signup">
 <ul class="grid-x">

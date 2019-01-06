@@ -1,7 +1,7 @@
 
 @import 'settings';
 
-$card-divider-background: $banner-color;
+$card-divider-background: $supermamas-color;
 
 @import 'foundation-sites/scss/foundation';
 @include foundation-global-styles;
@@ -17,8 +17,10 @@ $card-divider-background: $banner-color;
 @include foundation-top-bar;
 @include foundation-menu;
 
+@import 'date-selector';
 @import 'custom-checkbox';
 @import 'base';
+@import 'forms';
 
 ul.grid-x, ul.cell {
     margin: 0;
@@ -29,59 +31,6 @@ button.stretch, input.stretch {
     width: 100%;
 }
 
-form.registration {
-    section {
-        @include card-container($border:0);
-
-        @for $index from 1 through 6 {
-            h#{$index} {
-                @include card-divider;
-                color: $white;
-                padding: 1rem;
-            }
-        }
-        .field-collection {
-            @include card-section;
-        }
-    }
-    input.submit {
-        color: $white;
-        width: 100%;
-        padding: 2rem;
-    }
-}
-
-.form-field {
-    margin-bottom: 2rem;
-
-    ul {
-        margin: 0;
-    }
-    li {
-        list-style-type: none;
-    }
-    label {
-        display: inline;
-        margin-right: 0rem;
-    }
-    span.required {
-        color: $alert-color;
-    }
-    .heading {
-        label {
-            font-size: 100%;
-            font-weight: 600;
-        }
-    }
-    input, select {
-        margin-bottom: 0rem;
-    }
-    .help-text {
-        margin-top: 0.0rem;
-        margin-bottom: 0.2rem;
-    }
-}
-
 .signup {
     li {
         list-style-type: none;
@@ -90,19 +39,4 @@ form.registration {
         text-align: center;
         color: #777;
     }        
-}
-
-.date-range-selector {
-    ul, li, label {
-        margin: 0;
-    }
-
-    .calendar {
-        @include xy-grid;
-            
-        li {
-            list-style-type: none;
-            text-align: center;
-        }
-    }
 }

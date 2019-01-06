@@ -13,7 +13,7 @@
     <form method="post">
         {{ calendar.signup(form_values.available_dates, form_values.signups, form_values.current_signup) }}
         {{ forms.input("max_visits", label=_("Max visits"), errors=form_errors, values=form_values)}}
-        {{ forms.submit(_("Sign up"))}}
+        {{ forms.final_submit(_("Sign up"))}}
     </form>
 </section>
 {% endblock %}

@@ -5,9 +5,9 @@ from dateutil import rrule, parser
 from datetime import datetime, date
 
 from supermamas.pamperings import PamperingService
-from supermamas.pamperings.forms import PamperingFilterForm
+from supermamas.pamperings.forms import PamperingFilterForm, CreatePamperingForm
 from supermamas.common.router_utils import admin_only
-from supermamas.pamperings.viewmodels import PamperingListViewModel
+from supermamas.pamperings.viewmodels import PamperingListViewModel, CreatePamperingViewModel
 
 bp = Blueprint("pamperings", __name__)
 
@@ -32,24 +32,21 @@ def get_details(id):
 @login_required
 @admin_only
 def create():
-    errors = {}
     bubble_mama_id = request.args.get("bubble_mama")
-    start_date = None
-    end_date = None
+    form = CreatePamperingForm(request.form)
 
     if request.method == "POST":
-        if request.form.get("refresh_dates"):
-            start_date = parser.parse(request.form["start_date"]).date()
-            end_date = parser.parse(request.form["end_date"]).date()
-        else:
-            pampering, errors = PamperingService().create_pampering(bubble_mama_id, request.form.getlist("date_range[]"))
-            if not errors:
+        if not request.form.get("refresh_dates"):
+            pampering = PamperingService().create_pampering(bubble_mama_id, form)
+            if pampering:
                 return redirect("/")
             else:
-                flash(gettext(u"Fix all errors"))
+                flash(gettext(u"Something went wrong during pampering creation"))
 
-    pampering_plan = PamperingService().prepare_pampering(bubble_mama_id, start_date, end_date)
-    return render_template("create_pampering.html.j2", form_errors=errors, form_values=pampering_plan)
+    return render_template(
+        "pamperings/create.html.j2",
+        form=form,
+        viewmodel=CreatePamperingViewModel(bubble_mama_id))
 
 @bp.route("/pamperings/signup", methods=("GET", "POST"))
 @login_required

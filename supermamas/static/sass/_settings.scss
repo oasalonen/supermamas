@@ -64,8 +64,8 @@
 
 // 1. Global
 // ---------
+$supermamas-color: #f25f70;
 $subdued-color: #fafafa;
-$banner-color: #f25f70;
 
 $global-font-size: 100%;
 $global-width: rem-calc(800);
@@ -73,7 +73,7 @@ $global-lineheight: 1.5;
 $foundation-palette: (
     primary: #e1122a,
     secondary: #404040,
-    success: $banner-color,
+    success: $supermamas-color,
     warning: #ffae00,
     alert: #cc4b37,
   );
@@ -848,7 +848,7 @@ $tooltip-radius: $global-radius;
 // -----------
 
 $topbar-padding: 0.5rem;
-$topbar-background: $banner-color;
+$topbar-background: $supermamas-color;
 $topbar-submenu-background: $topbar-background;
 $topbar-title-spacing: 0.5rem 1rem 0.5rem 0;
 $topbar-input-width: 200px;

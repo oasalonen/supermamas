@@ -14,7 +14,7 @@
     {% block intro_text %}
     {% endblock %}
     <form class="registration" action="{% block intro_form_action %}{% endblock %}">
-        {{ forms.submit(_("Next")) }}
+        {{ forms.final_submit(_("Next")) }}
     </form>
 </section>
 {% endblock %}

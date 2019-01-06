@@ -6,25 +6,12 @@
     <input name="{{ name }}" id="{{ name }}" type="{{ type }}" value="{{ value }}" class="{{ invalid }}" {{ required }}/>
 {%- endmacro %}
 
-{% macro date_selector(name, group="dates", value="", values=None) -%}
-    {% set value = values[name] if name in values else value %}
-    {% set checked = "checked" if value.selected %}
-    <div class="container">
-        <input name="{{ group }}" id="{{ name }}" type="checkbox" value="{{ name }}" {{ checked }} />
-        <label for="{{ name }}">{{ value.label }}</label>
-    </div>
-{%- endmacro %}
-
 {%- macro submit(value, name="", class="") -%}
     <input type="submit" class="button success submit {{ class }}" value="{{ value }}" name="{{ name }}" /> 
 {%- endmacro %}
 
 {%- macro final_submit(value, name="", class="") -%}
-    <div class="flex-container flex-dir-row-reverse">
-        <div class="flex-child-shrink">
-            {{ submit(value, name, class) }}
-        </div>
-    </div>
+    {{ submit(value=value, name=name, class="final") }}
 {%- endmacro %}
 
 {%- macro checkbox(name, is_checked=False, group="") -%}

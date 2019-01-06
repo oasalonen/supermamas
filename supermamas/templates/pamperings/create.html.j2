@@ -1,0 +1,45 @@
+{% extends "base.html.j2" %}
+
+{% import "forms.html.j2" as forms %}
+{% import "calendar.html.j2" as calendar %}
+
+{% block header %}
+<h1>{% trans %}Create pampering{% endtrans %}</h1>
+{% endblock %}
+
+{% block content %}
+<form class="create-pampering" method="post">
+
+    <section>
+        <h2>{% trans %}Bubble mama details{% endtrans %}</h2>
+        <div class="field-collection">
+            <div class="grid-x grid-margin-x">
+                <div class="cell small-4">{% trans %}Name{% endtrans %}</div>
+                <div class="cell small-8">{{ viewmodel.bubble_mama.name }}</div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>{% trans %}Available pampering dates{% endtrans %}</h2>
+        <div class="field-collection">
+            <div class="grid-x grid-margin-x align-middle">
+                <div class="cell small-6 medium-4">
+                    {{ forms.render_field(form.start_date) }}
+                </div>
+                <div class="cell small-6 medium-4">
+                    {{ forms.render_field(form.end_date) }}
+                </div>
+                <div class="cell small-12 medium-4">
+                    {{ forms.submit(_("Refresh dates"), name="refresh_dates") }}
+                </div>
+            </div>
+
+            {{ forms.render_field(form.available_dates, class="date-selector small-up-7") }}
+
+            {{ forms.final_submit(_("Create"))}}
+        </div>
+    </section>
+
+</form>
+{% endblock %}

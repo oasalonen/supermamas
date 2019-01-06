@@ -30,53 +30,23 @@ class Service:
         pamperings = self._repository().get_by_bubble_mamas(bubble_mama_ids)
         return dict([(pampering.bubble_mama.id, pampering) for pampering in pamperings])
 
-    def prepare_pampering(self, bubble_mama_id, start_date=None, end_date=None):
-        start_date = start_date if start_date else date.today()
-        end_date = end_date if end_date else start_date + timedelta(days=20)
-        date_range = {}
-        for dt in rrule.rrule(rrule.DAILY, dtstart=datetime(start_date.year, start_date.month, start_date.day), until=datetime(end_date.year, end_date.month, end_date.day)):
-            d = dt.date()
-            date_range[d.isoformat()] = {
-                "selected": False,
-                "weekday": d.weekday(),
-                "label": "{} {}/{}".format(self.weekdays()[d.weekday()], d.day, d.month)
-            }
-
-        bubble_mama = self._accounts_repository().get(bubble_mama_id)
-
-        return {
-            "bubble_mama": {
-                "id": bubble_mama_id,
-                "first_name": bubble_mama.first_name,
-                "last_name": bubble_mama.last_name
-            },
-            "start_date": start_date.isoformat(),
-            "end_date": end_date.isoformat(),
-            "date_range[]": date_range
-            }
-
-    def create_pampering(self, bubble_mama_id, date_range):
-        errors = {}
-
-        available_dates = list(map(lambda d: parser.parse(d), date_range))
-        if len(available_dates) == 0:
-            errors["date_range[]"] = gettext(u"You must select at least one date for a pampering")
-            return None, errors
-
+    def create_pampering(self, bubble_mama_id, form):
         bubble_mama = self._accounts_repository().get(bubble_mama_id)
         if not bubble_mama:
-            errors["bubble_mama_id"] = gettext(u"That bubble mama doesn't seem to exist...")
+            raise Exception("Bubble mama {} does not exist", bubble_mama_id)
 
-        if not errors:
-            pampering = Pampering()
-            pampering.bubble_mama = bubble_mama
-            pampering.district = AreaService().get_district(bubble_mama.district["id"])
-            pampering.available_dates = available_dates
-            pampering = self._repository().insert(pampering)
-        else:
-            pampering = None
+        available_dates = form.available_dates.get_datetimes()
+        district = AreaService().get_district(bubble_mama.address.district.id)
+        if not district:
+            raise Exception("District {} does not exist", bubble_mama.address.district.id)
 
-        return (pampering, errors)
+        pampering = Pampering()
+        pampering.bubble_mama = bubble_mama
+        pampering.district = AreaService().get_district(bubble_mama.address.district.id)
+        pampering.available_dates = available_dates
+        pampering = self._repository().insert(pampering)
+
+        return pampering
 
     def prepare_signup(self, pampering_id, helping_mama_id):
         pampering = self._repository().get(pampering_id)

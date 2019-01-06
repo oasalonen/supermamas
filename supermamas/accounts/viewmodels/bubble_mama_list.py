@@ -25,7 +25,7 @@ class BubbleMamaListViewModel(dict):
 
         return {
             "id": bubble_mama.id,
-            "name": bubble_mama.first_name + " " + bubble_mama.last_name,
+            "name": bubble_mama.full_name,
             "district": district,
             "pampering": self.create_pampering_cell(bubble_mama, pampering)
         }
