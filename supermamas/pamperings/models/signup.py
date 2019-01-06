@@ -1,23 +1,20 @@
+from supermamas.accounts import UserReference
 
 class Signup(dict):
     def __init__(self, init_dict = None):
         if init_dict:
             self.update(init_dict)
+            self.helping_mama = init_dict.get("helping_mama")        
         else:
             self["max_visits"] = 0
-        return
 
     @property
     def helping_mama(self):
         return self.get("helping_mama")
 
     @helping_mama.setter
-    def helping_mama(self, user):
-        self["helping_mama"] = {
-            "id": user.id,
-            "first_name": user.first_name,
-            "last_name": user.last_name
-        }
+    def helping_mama(self, value):
+        self["helping_mama"] = UserReference(value) if value else None
     
     @property
     def availabilities(self):

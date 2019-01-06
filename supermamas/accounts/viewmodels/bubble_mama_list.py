@@ -2,7 +2,7 @@ from flask import url_for
 from flask_babel import gettext
 
 from supermamas.accounts import AccountsService
-from supermamas.pamperings import Service as PamperingService
+from supermamas.pamperings import PamperingService
 
 class BubbleMamaListViewModel(dict):
 

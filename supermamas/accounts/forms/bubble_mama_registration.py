@@ -17,7 +17,7 @@ from flask_babel import gettext
 from re import split
 
 from supermamas.accounts.forms.registration import UserRegistrationForm, AcceptanceBooleanField
-from supermamas.pamperings.pampering import PamperingType
+from supermamas.pamperings import PamperingType
 from supermamas.common.forms import ListFormField, RadioWithOtherForm, SelectWithOtherForm, CalendarField
 
 def get_form_for_pampering_type(pampering_type, city, form):

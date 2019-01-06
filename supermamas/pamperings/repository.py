@@ -1,5 +1,5 @@
 from flask_pymongo import PyMongo, ObjectId
-from supermamas.pamperings.pampering import Pampering
+from supermamas.pamperings import Pampering
 
 class Repository:
     __instance = None

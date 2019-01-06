@@ -4,7 +4,7 @@ from flask_login import login_required
 from dateutil import rrule, parser
 from datetime import datetime, date
 
-from supermamas import pamperings
+from supermamas.pamperings import PamperingService
 from supermamas.pamperings.forms import PamperingFilterForm
 from supermamas.common.router_utils import admin_only
 from supermamas.pamperings.viewmodels import PamperingListViewModel
@@ -18,7 +18,7 @@ def view_pamperings():
     form = PamperingFilterForm()
 
     viewmodel = PamperingListViewModel()
-    viewmodel.set_pamperings(pamperings.Service().get_all_pamperings())
+    viewmodel.set_pamperings(PamperingService().get_all_pamperings())
 
     return render_template("view_pamperings.html.j2", form=form, viewmodel=viewmodel)
 
@@ -42,13 +42,13 @@ def create():
             start_date = parser.parse(request.form["start_date"]).date()
             end_date = parser.parse(request.form["end_date"]).date()
         else:
-            pampering, errors = pamperings.Service().create_pampering(bubble_mama_id, request.form.getlist("date_range[]"))
+            pampering, errors = PamperingService().create_pampering(bubble_mama_id, request.form.getlist("date_range[]"))
             if not errors:
                 return redirect("/")
             else:
                 flash(gettext(u"Fix all errors"))
 
-    pampering_plan = pamperings.Service().prepare_pampering(bubble_mama_id, start_date, end_date)
+    pampering_plan = PamperingService().prepare_pampering(bubble_mama_id, start_date, end_date)
     return render_template("create_pampering.html.j2", form_errors=errors, form_values=pampering_plan)
 
 @bp.route("/pamperings/signup", methods=("GET", "POST"))
@@ -60,14 +60,14 @@ def signup():
     max_visits = request.form.get("max_visits")
 
     if request.method == "POST":
-        signup, errors = pamperings.Service().add_signup(pampering_id, helping_mama_id, request.form.getlist("availabilities[]"), max_visits)
+        signup, errors = PamperingService().add_signup(pampering_id, helping_mama_id, request.form.getlist("availabilities[]"), max_visits)
         if not errors:
             return redirect("/")
         else:
             flash(gettext(u"Fix all errors"))
             pampering_plan = request.form
     else:
-        pampering_plan = pamperings.Service().prepare_signup(pampering_id, helping_mama_id)    
+        pampering_plan = PamperingService().prepare_signup(pampering_id, helping_mama_id)    
 
     return render_template("signup_pampering.html.j2", form_errors=errors, form_values=pampering_plan)
     
