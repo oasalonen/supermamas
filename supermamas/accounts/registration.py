@@ -2,6 +2,7 @@ from flask_bcrypt import Bcrypt
 from flask_babel import gettext
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from datetime import datetime
 
 from supermamas.common.template_renderer import TemplateRenderer
 from supermamas.common.emailer import Emailer
@@ -118,6 +119,7 @@ class RegistrationService:
         return user
 
     def _register_user(self, user):
+        user.registration_time = datetime.utcnow()
         user.require_activation()
         user = self._repository().insert(user)
         self.send_activation_email(user)

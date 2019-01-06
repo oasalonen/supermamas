@@ -134,6 +134,14 @@ class User(dict, UserMixin):
         self["referrer"] = value
 
     @property
+    def registration_time(self):
+        return self.get("registration_time")
+
+    @registration_time.setter
+    def registration_time(self, value):
+        self["registration_time"] = value
+
+    @property
     def bubble_mama_profile(self):
         return self.get("bubble_mama_profile")
 
