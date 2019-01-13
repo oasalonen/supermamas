@@ -1,8 +1,6 @@
-class HelpingMamaProfile(dict):
-    def __init__(self, init_dict = None):
-        if init_dict:
-            self.update(init_dict)
-        return
+from supermamas.common import Model
+
+class HelpingMamaProfile(Model):
 
     @property
     def good_to_know(self):

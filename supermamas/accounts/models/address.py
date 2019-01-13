@@ -1,10 +1,10 @@
 from supermamas.areas import District, City
+from supermamas.common import Model
 
-class Address(dict):
+class Address(Model):
     def __init__(self, init_dict = None):
-        if init_dict:
-            self.update(init_dict)
-            
+        super().__init__(init_dict)
+        if init_dict:            
             district = init_dict.get("district")
             if district:
                 self.district = District(district)

@@ -3,6 +3,7 @@ from supermamas.common.template_renderer import TemplateRenderer
 from supermamas.common.emailer import Emailer
 from supermamas.common import router_utils
 from supermamas.common.datetime import weekdays
+from supermamas.common.models.model import Model, Entity, Reference
 
 def init(app):
     ConfigurationService(app.config)

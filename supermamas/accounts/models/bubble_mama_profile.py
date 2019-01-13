@@ -1,8 +1,6 @@
-class BubbleMamaProfile(dict):
-    def __init__(self, init_dict = None):
-        if init_dict:
-            self.update(init_dict)
-        return
+from supermamas.common import Model
+
+class BubbleMamaProfile(Model):
 
     @property
     def pampering_type(self):

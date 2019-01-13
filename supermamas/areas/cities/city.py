@@ -1,25 +1,15 @@
 from flask_pymongo import ObjectId
 from supermamas.areas import District
+from supermamas.common import Entity
 
-class City(dict):
+class City(Entity):
     def __init__(self, init_dict = None):
-        self["districts"] = None
+        self["districts"] = []
+        super().__init__(init_dict)
         if init_dict:
-            self.update(init_dict)
-
             districts = init_dict.get("districts")
             if districts:
                 self["districts"] = [District(district) for district in districts]
-            
-        return
-
-    @property
-    def id(self):
-        return str(self.get("_id"))
-
-    @id.setter
-    def id(self, value):
-        self["_id"] = ObjectId(value)
 
     @property
     def name(self):

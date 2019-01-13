@@ -2,25 +2,18 @@ from flask_pymongo import ObjectId
 from flask_login import UserMixin
 from secrets import token_urlsafe
 from datetime import datetime, timedelta
+
 from supermamas.accounts.models.address import Address
 from supermamas.accounts.models.helping_mama_profile import HelpingMamaProfile
 from supermamas.accounts.models.bubble_mama_profile import BubbleMamaProfile
+from supermamas.common import Reference
 
-class UserReference(dict):
+class UserReference(Reference):
     def __init__(self, init_dict=None):
         if init_dict:
-            self.id = init_dict["_id"]
             self.first_name = init_dict["first_name"]
             self.last_name = init_dict["last_name"]
         return
-
-    @property 
-    def id(self):
-        return str(self.get("_id"))
-
-    @id.setter
-    def id(self, value):
-        self["_id"] = ObjectId(value)
 
     @property
     def first_name(self):

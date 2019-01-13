@@ -1,9 +1,9 @@
 from supermamas.accounts import UserReference
+from supermamas.common import Model
 
-class Signup(dict):
+class Signup(Model):
     def __init__(self, init_dict = None):
         if init_dict:
-            self.update(init_dict)
             self.helping_mama = init_dict.get("helping_mama")        
         else:
             self["max_visits"] = 0

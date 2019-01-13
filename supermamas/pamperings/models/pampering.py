@@ -4,6 +4,7 @@ from flask_pymongo import ObjectId
 from supermamas.pamperings.models.signup import Signup
 from supermamas.accounts import UserReference
 from supermamas.areas import District
+from supermamas.common import Entity, Model
 
 class PamperingType(Enum):
     PRE = "PRE"
@@ -12,21 +13,13 @@ class PamperingType(Enum):
     EMERGENCY = "EMERGENCY"
     SUPPORT = "SUPPORT"
 
-class Pampering(dict):
+class Pampering(Entity):
     def __init__(self, init_dict=None):
+        super().__init__(init_dict)
         if init_dict:
-            self.update(init_dict)
             self.bubble_mama = init_dict.get("bubble_mama")
             self.district = init_dict.get("district")
             self.bubble_mama_info = init_dict.get("bubble_mama_info")
-
-    @property 
-    def id(self):
-        return str(self.get("_id"))
-
-    @id.setter
-    def id(self, value):
-        self["_id"] = ObjectId(value)
 
     @property
     def bubble_mama(self):
@@ -82,10 +75,7 @@ class Pampering(dict):
     def bubble_mama_info(self, value):
         self["bubble_mama_info"] = self.BubbleMamaInfo(value)
 
-    class BubbleMamaInfo(dict):
-        def __init__(self, init_dict=None):
-            if init_dict:
-                self.update(init_dict)
+    class BubbleMamaInfo(Model):
 
         @property
         def name(self):
