@@ -6,7 +6,7 @@ from email.mime.multipart import MIMEMultipart
 
 from supermamas.pamperings import Signup
 from supermamas.pamperings import Pampering
-from supermamas.accounts import Repository as AccountsRepository
+from supermamas.accounts import Repository as AccountsRepository, AccountsService
 from supermamas.areas import AreaService
 from supermamas.common import Emailer
 
@@ -66,6 +66,10 @@ class Service:
         return pampering
 
     def send_pampering_invitation(self, pampering_id, form):
+        recipients = [helping_mama.email for district_id in form.districts.data
+            for helping_mama in AccountsService().get_helping_mamas_by_district(district_id)]
+        recipients = recipients + form.get_additional_recipients()
+
         message = MIMEMultipart("alternative")
         message["Subject"] = form.subject.data
         message["From"] = form.sender.data
@@ -74,7 +78,7 @@ class Service:
         # TODO: attach plaintext
         message.attach(MIMEText(form.message.data, "html"))
 
-        Emailer().send_message(form.get_recipients(), message)
+        Emailer().send_message(recipients, message)
 
     def prepare_signup(self, pampering_id, helping_mama_id):
         pampering = self._repository().get(pampering_id)

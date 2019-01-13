@@ -30,3 +30,7 @@ class Repository:
 
     def get_all(self):
         return [City(city) for city in self.collection.find()]
+
+    def get_by_district(self, district_id):
+        city = self.collection.find_one({ "districts._id": ObjectId(district_id) })
+        return City(city) if city else None

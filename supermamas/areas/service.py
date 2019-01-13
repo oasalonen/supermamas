@@ -33,6 +33,10 @@ class Service:
     def get_district(self, district_id):
         return self._district_repository().get(district_id)
 
+    def get_districts_in_same_city_by_district(self, district_id):
+        city = self._city_repository().get_by_district(district_id)
+        return city.districts
+
     def add_city(self, city_name):
         errors = {}
         if not city_name:

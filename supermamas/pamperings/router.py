@@ -67,9 +67,7 @@ def invite(pampering_id):
         pampering = PamperingService().get_pampering(pampering_id)
         if not pampering:
             raise Exception(F"No such pampering {pampering_id}")
-        helping_mamas = AccountsService().get_helping_mamas_by_district(pampering.district.id)
-        recipients = [helping_mama.email for helping_mama in helping_mamas]
-        form.initialize_fields(ConfigurationService().get("MAIL_SENDER"), recipients, pampering)
+        form.initialize_fields(ConfigurationService().get("MAIL_SENDER"), pampering)
     else:
         raise Exception(F"Unhandled method {request.method}")
 
