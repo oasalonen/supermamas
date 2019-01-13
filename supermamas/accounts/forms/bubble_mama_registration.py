@@ -112,7 +112,7 @@ class BubbleMamaRegistrationForm(UserRegistrationForm):
 
     allow_helping_dads = RadioField(
         gettext(u"Helping Dads"),
-        [InputRequired(gettext(u"Please select the type of pampering you want"))],
+        [InputRequired(gettext(u"Please select one option"))],
         choices=[
             ("yes", gettext(u"Wonderful yes!")),
             ("no", gettext(u"I do mind. Please only send HelpingMamas for me."))
